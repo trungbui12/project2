@@ -1,0 +1,81 @@
+<div class="sidebar" data-background-color="dark">
+  <div class="sidebar-logo">
+    <!-- Logo Header -->
+    <div class="logo-header" data-background-color="dark">
+      <a th:href="@{/admin}" class="logo">
+        <img
+                th:src="@{/kaiadmin/assets/img/kaiadmin/logo_light.svg}"
+                alt="navbar brand"
+                class="navbar-brand"
+                height="20"
+        />
+      </a>
+      <div class="nav-toggle">
+        <button class="btn btn-toggle toggle-sidebar">
+          <i class="gg-menu-right"></i>
+        </button>
+        <button class="btn btn-toggle sidenav-toggler">
+          <i class="gg-menu-left"></i>
+        </button>
+      </div>
+      <button class="topbar-toggler more">
+        <i class="gg-more-vertical-alt"></i>
+      </button>
+    </div>
+    <!-- End Logo Header -->
+  </div>
+  <div class="sidebar-wrapper scrollbar scrollbar-inner">
+    <div class="sidebar-content">
+      <ul class="nav nav-secondary">
+        <li class="nav-item" th:classappend="${active=='index'?'active':''}">
+          <a
+                  th:href="@{/admin}"
+                  class="collapsed"
+                  aria-expanded="false"
+          >
+            <i class="fas fa-home"></i>
+            <p>Quản trị</p>
+          </a>
+
+        </li>
+        <li class="nav-item" th:classappend="${active=='category'?'active':''}">
+          <a th:href="@{/admin/categories}">
+            <i class="fas fa-bars"></i>
+            <p>Quản lý loại sản phẩm</p>
+
+          </a>
+        </li>
+        <li class="nav-item" th:classappend="${active=='product'?'active':''}">
+          <a th:href="@{/admin/products}">
+            <i class="fas fa-bars"></i>
+            <p>Quản lý sản phẩm</p>
+          </a>
+        </li>
+        <li class="nav-item" th:classappend="${active=='order'?'active':''}">
+          <a th:href="@{/admin/orders}">
+            <i class="fas fa-bars"></i>
+            <p>Quản lý đơn hàng</p>
+          </a>
+        </li>
+        <li class="nav-item" th:classappend="${active=='voucher'?'active':''}">
+          <a th:href="@{/admin/vouchers}">
+            <i class="fas fa-bars"></i>
+            <p>Quản lý khuyến mãi</p>
+          </a>
+        </li>
+        <li class="nav-item" th:classappend="${active=='account'?'active':''}">
+          <a th:href="@{/admin/accounts}">
+            <i class="fas fa-bars"></i>
+            <p>Quản lý người dùng</p>
+          </a>
+        </li>
+        <li class="nav-item" th:classappend="${active=='thongke'?'active':''}">
+          <a th:href="@{/admin/thong-ke}">
+            <i class="fas fa-bars"></i>
+            <p>Báo cáo thống kê</p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

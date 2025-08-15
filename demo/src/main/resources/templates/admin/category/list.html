@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"   th:replace="~{/admin/layout::view(~{::title}, ~{::article})}" th:with="active=${active}">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý loại sản phẩm</title>
+</head>
+<body>
+	<article>
+		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+			<div>
+				<h3 class="fw-bold mb-3">Loại sản phẩm</h3>
+				<h6 class="op-7 mb-2"></h6>
+			</div>
+			<div class="ms-md-auto py-2 py-md-0">
+				<a th:href="@{/admin/categories/add}" class="btn btn-primary btn-round">Thêm mới</a>
+			</div>
+		</div>
+		<div class="row">
+	        <div class="col-md-12">
+	          <div class="card">
+	            <div class="card-header">
+	              <h4 class="card-title">Danh sách loại sản phẩm</h4>
+	            </div>
+	            <div class="card-body">
+	              <div class="table-responsive">
+	                <table
+	                  id="basic-datatables"
+	                  class="display table table-striped table-hover"
+	                >
+	                  <thead>
+	                    <tr>
+	                      <th>Id</th>
+	                      <th>Name</th>
+	                       <th>Slug</th>
+	                      <th width="15%">Action</th>
+	                    </tr>
+	                  </thead>
+	                  
+	                  <tbody >
+	                  	<th:block th:each="category:${categories}">
+	                  		<tr th:object="${category}">
+	                        <td th:text="*{id}"></td>
+	                        <td th:text="*{name}"></td>
+	                        <td th:text="*{slug}"></td>
+	                        <td>
+	                        	<div class="form-button-action">
+	                             <a th:href="@{|/admin/categories/edit/*{id}|}" data-bs-toggle="tooltip" title="Chỉnh sửa" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
+	                               <i class="fa fa-edit"></i>
+	                             </a>
+	                             <a th:href="@{|/admin/categories/delete/*{id}|}" data-bs-toggle="tooltip" title="Xóa" class="btn btn-link btn-danger" data-original-title="Remove">
+	                               <i class="fa fa-times"></i>
+	                             </a>
+	                            </div>
+	                        </td>
+	                      </tr>
+	                  	</th:block>
+	                  </tbody>
+	                </table>
+	              </div>
+	            </div>
+	          </div>
+	        </div>
+	</article>
+</body>
+</html>

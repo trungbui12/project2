@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"   th:replace="~{/admin/layout::view(~{::title}, ~{::article})}" th:with="active=${active}">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý Đơn hàng</title>
+</head>
+<body>
+	<article>
+		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+			<div>
+				<h3 class="fw-bold mb-3">Quản lý đơn hàng</h3>
+				<h6 class="op-7 mb-2"></h6>
+			</div>
+			<div class="ms-md-auto py-2 py-md-0">
+				<a th:href="@{/admin/orders/add}" class="btn btn-primary btn-round">Thêm mới</a>
+			</div>
+		</div>
+		<div class="row">
+	        <div class="col-md-12">
+	          <div class="card">
+	            <div class="card-header">
+	              <h4 class="card-title">Danh sách đơn hàng</h4>
+	            </div>
+	            <div class="card-body">
+	              <div class="table-responsive">
+	                <table
+	                  id="basic-datatables"
+	                  class="display table table-striped table-hover"
+	                >
+	                  <thead>
+	                    <tr>
+	                      	<th>Mã đơn</th>
+	                      	<th>Ngày đặt</th>
+	                       	<th>Khách hàng</th>
+	                       	<th>Phí vận chuyển</th>
+	                       	<th>Giảm giá</th>
+	                       	<th>Tổng tiền</th>
+	                       	<th>PTTT</th>
+	                       	<th>Trạng thái</th>
+	                     	<th width="15%">#</th>
+	                    </tr>
+	                  </thead>
+	                  <tbody >
+	                  	<th:block th:each="order:${orders}">
+	                  		<tr th:object="${order}">
+		                        <td th:text="*{id}"></td>
+		                        <td th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy')}"></td>
+		                        <td th:text="*{account.fullname + ' ' + account.phone}"></td>
+		                        <td th:text="${#numbers.formatDecimal(order.feeShip, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
+		                        <td th:text="${#numbers.formatDecimal(order.discount, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
+		                        <td th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
+		                        <td th:text="${order.paymentMethod==1?'VNPAY':'COD'}"></td>
+		                        <th th:switch="*{status}">
+		                        	<span th:case="1">Chờ xác nhận</span>
+		                        	<span th:case="2">Đang xử lý</span>
+		                        	<span th:case="3">Đang vận chuyển</span>
+		                        	<span th:case="4">Đã giao</span>
+		                        	<span th:case="5">Hoàn thành</span>
+		                        	<span th:case="6">Hủy</span>
+		                        </th>
+		                        <td>
+		                        	<div class="form-button-action">
+		                        		<a th:href="@{|/admin/orders/detail/*{id}|}" data-bs-toggle="tooltip" title="Chi tiết" class="btn btn-link btn-black btn-lg" data-original-title="Edit Task">
+			                               <i class="fa fa-eye-slash"></i>
+			                            </a>
+		                        		<a th:if="*{status}==1" th:href="@{|/admin/orders/updateStatus/*{id}/2|}" data-bs-toggle="tooltip" title="Xác nhận" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
+			                                <i class="fa fa-check-square"></i>
+			                            </a>
+			                            <a th:if="*{status}==1" th:href="@{|/admin/orders/updateStatus/*{id}/6|}" data-bs-toggle="tooltip" title=" Hủy đơn" class="btn btn-link btn-danger btn-lg" data-original-title="Edit Task">
+			                              <i class="fa fa-recycle"></i>
+			                            </a>
+			                            <a th:if="*{status}==2" th:href="@{|/admin/orders/updateStatus/*{id}/3|}" data-bs-toggle="tooltip" title="Đang vận chuyển" class="btn btn-link btn-success btn-lg" data-original-title="Edit Task">
+			                             Đang vận chuyển
+			                            </a>
+			                            <a th:if="*{status}==3" th:href="@{|/admin/orders/updateStatus/*{id}/4|}" data-bs-toggle="tooltip" title="Đã giao" class="btn btn-outline-success btn-lg" data-original-title="Edit Task">
+			                             Đã giao
+			                            </a>
+			                            
+		                            </div>
+		                        </td>
+	                      </tr>
+	                  	</th:block>
+	                  </tbody>
+	                </table>
+	              </div>
+	            </div>
+	          </div>
+	        </div>
+	        <input type="hidden" th:value="${message}" id="message">
+	        <script type="text/javascript">
+	        	let message = document.getElementById('message').value;
+	        	if(message){
+	        		swal("Thông báo",message,"success");
+	        	}
+	        </script>
+	</article>
+</body>
+</html>
