@@ -36,6 +36,11 @@ public class Product {
     @Positive(message = "Gia phai lon hon 0")
      Integer quantity;
      Boolean active;
+    @Column(columnDefinition = "varchar(255)")
+     String sizes; // mới thêm
+
+    @Column(columnDefinition = "varchar(255)")
+     String colors; // mới thêm
     @ManyToOne @JoinColumn(name = "category_id")
     Category category;
     @OneToMany(mappedBy = "product")
@@ -129,5 +134,21 @@ public class Product {
 
     public void setSlug(String slug) {
         this.slug = slug;
+    }
+
+    public String getColors() {
+        return colors;
+    }
+
+    public void setColors(String colors) {
+        this.colors = colors;
+    }
+
+    public String getSizes() {
+        return sizes;
+    }
+
+    public void setSizes(String sizes) {
+        this.sizes = sizes;
     }
 }

@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Account;
 import com.example.demo.repository.AccountRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,9 +16,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public abstract class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService {
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    HttpSession session;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(email);
@@ -28,6 +31,7 @@ public abstract class UserService implements UserDetailsService {
                 role = "ROLE_ADMIN";
             }
             authorities.add(new SimpleGrantedAuthority(role));
+            session.setAttribute("account", account);
             return new User(email, account.getPassword(), authorities);
         }
         return null;

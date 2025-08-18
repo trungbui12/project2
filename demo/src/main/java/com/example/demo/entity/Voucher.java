@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -32,9 +33,11 @@ public class Voucher {
     @Temporal(TemporalType.DATE)
     Date createdAt;
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Chưa nhập ngày bắt đầu")
     Date startedAt;
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Chưa nhập ngày kết thúc")
     Date endAt;
     Boolean actived;

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,13 +20,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class HomeController {
+public class ProductCilentController {
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
     ProductRepository productRepository;
-    @GetMapping("/")
-    public String home(Model model, @RequestParam("page")Optional<Integer> page) {
+    @RequestMapping("/products")
+    public String index(Model model, @RequestParam("page") Optional<Integer> page) {
         // Trả về tên file template (home.html)
         List<Category> categories = categoryRepository.findByActive(true, Sort.by(Sort.Direction.DESC, "id"));
         Pageable pageable = PageRequest.of(page.orElse(0), 16, Sort.by(Sort.Direction.DESC, "id"));
@@ -36,22 +37,19 @@ public class HomeController {
         model.addAttribute("products", products);
         model.addAttribute("page", page.orElse(0) +1);
         model.addAttribute("totalPage", products.getTotalPages());
-        model.addAttribute("active", "home");
-        return "home";
+        model.addAttribute("active", "product");
+        return "product";
     }
-//    tim kiem
-@RequestMapping("/search")
-public String search(Model model, @RequestParam("keyword") String keyword, @RequestParam("page")Optional<Integer> page) {
-    // Trả về tên file template (home.html)
-    List<Category> categories = categoryRepository.findByActive(true, Sort.by(Sort.Direction.DESC, "id"));
-    Pageable pageable = PageRequest.of(page.orElse(0), 16, Sort.by(Sort.Direction.DESC, "id"));
-    Page<Product> products = productRepository.findByKeyWord("%" +keyword + "%", pageable);
 
-    model.addAttribute("categories", categories);
-
-    model.addAttribute("products", products);
-    model.addAttribute("page", page.orElse(0) +1);
-    model.addAttribute("totalPage", products.getTotalPages());
-    return "search";
-}
+    @RequestMapping("/products/{slug}")
+    public String index(Model model, @PathVariable("slug") String slug) {
+        Product product = productRepository.findByActiveAndSlug(true, slug);
+        model.addAttribute("active", "product");
+        model.addAttribute("product", product);
+        if (product != null){
+            List<Product> relateProducts = productRepository.findByActiveAndCategory(true, product.getCategory(), Sort.by(Sort.Direction.DESC, "id"));
+            model.addAttribute("relateProducts", relateProducts);
+        }
+        return "product-detail";
+    }
 }

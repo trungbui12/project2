@@ -21,12 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SercurityConfig {
     @Bean
     UserDetailsService userDetailsService(PasswordEncoder encoder){
-        return new UserService() {
-            @Override
-            public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-                return super.loadUserByUsername(email);
-            }
-        }; // class này phải implements UserDetailsService
+        return new UserService();
     }
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -38,15 +33,17 @@ public class SercurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers("/","/css/**","/js/**","/fonts/**","/images/**","/vendor/**","/kaiadmin/**").permitAll()
-                                .requestMatchers("/","/register").permitAll()
+                                .requestMatchers("/","/register","/search","/products/**","/features/**","/blogs/**","/abouts/**","/contacts/**").permitAll()
+                                .requestMatchers("/favorites/**","/carts/**").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/error").permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/")
                         .permitAll()
                 )
-                .logout(logout->logout
+                .logout((logout)->logout
                         .logoutSuccessUrl("/")
                         .permitAll()
                 )

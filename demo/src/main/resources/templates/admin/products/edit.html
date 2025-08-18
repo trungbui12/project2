@@ -36,6 +36,11 @@
                         	<i class="text-danger" th:errors="*{slug}"></i>
                         	<label class="text-danger" th:text="${slugError}"></label>
                         </div>
+						<div class="form-group">
+							<label for="description">Mô tả</label>
+							<textarea class="form-control" id="description" th:field="*{description}"></textarea>
+
+						</div>
                         <div class="form-group">
                           	<label for="quantity">Số lượng</label>
                           	<input type="number" class="form-control" id="quantity" th:field="*{quantity}" required/>
@@ -78,7 +83,8 @@
 					const formatted = formatNumber($(this).val());
 				    $(lblPrice).html(formatted);
 				});
-	        </script>	
+	        </script>
+		</div>
 	</article>
 </body>
 </html>

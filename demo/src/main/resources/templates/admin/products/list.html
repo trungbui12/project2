@@ -33,6 +33,7 @@
 	                      	<th>Ảnh</th>
 	                       	<th>Tên</th>
 	                       	<th>Slug</th>
+							<th>Mô tả</th>
 	                       	<th>Số lượng</th>
 	                       	<th>Giá</th>
 	                       	<th>Loại sản phẩm</th>
@@ -47,6 +48,7 @@
 	                        <td><img alt="" th:src="@{|/images/*{image}|}" width="50" height="50"></td>
 	                        <td th:text="*{name}"></td>
 	                        <td th:text="*{slug}"></td>
+								<td th:text="*{description}"></td>
 	                        <td th:text="*{quantity}"></td>
 	                        <td th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')}"></td>
 	                        <td th:text="*{category.name}"></td>
@@ -68,6 +70,7 @@
 	            </div>
 	          </div>
 	        </div>
+	</div>
 	</article>
 </body>
 </html>
