@@ -43,5 +43,20 @@ public class AuthController {
         }
         return "register";
     }
+    @GetMapping("/blogs")
+    public String blog() {
+        // Trả về tên file template (admin.html)
+        return "blog";
+    }
+    @GetMapping("/abouts")
+    public String about() {
+        // Trả về tên file template (admin.html)
+        return "about";
+    }
+    @GetMapping("/contacts")
+    public String contact() {
+        // Trả về tên file template (admin.html)
+        return "contact";
+    }
 
 }

@@ -25,6 +25,8 @@ public class Account {
 
     @Column(columnDefinition = "nvarchar(60)")
     String fullname;
+    @Column(columnDefinition = "nvarchar(10)")
+    String phone;
 
     Boolean gender;
     Boolean admin;

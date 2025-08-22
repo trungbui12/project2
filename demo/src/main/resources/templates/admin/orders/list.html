@@ -32,6 +32,7 @@
 	                      	<th>Mã đơn</th>
 	                      	<th>Ngày đặt</th>
 	                       	<th>Khách hàng</th>
+							<th>Địa chỉ giao hàng</th> <!-- Thêm cột -->
 	                       	<th>Phí vận chuyển</th>
 	                       	<th>Giảm giá</th>
 	                       	<th>Tổng tiền</th>
@@ -46,10 +47,11 @@
 		                        <td th:text="*{id}"></td>
 		                        <td th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy')}"></td>
 		                        <td th:text="*{account.fullname + ' ' + account.phone}"></td>
+								<td th:text="*{shipAddress}"></td> <!-- Hiển thị shipAddress -->
 		                        <td th:text="${#numbers.formatDecimal(order.feeShip, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
 		                        <td th:text="${#numbers.formatDecimal(order.discount, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
 		                        <td th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
-		                        <td th:text="${order.paymentMethod==1?'VNPAY':'COD'}"></td>
+		                        <td th:text="${order.paymentMethod==1?'VietQR':'COD'}"></td>
 		                        <th th:switch="*{status}">
 		                        	<span th:case="1">Chờ xác nhận</span>
 		                        	<span th:case="2">Đang xử lý</span>
@@ -75,7 +77,7 @@
 			                            <a th:if="*{status}==3" th:href="@{|/admin/orders/updateStatus/*{id}/4|}" data-bs-toggle="tooltip" title="Đã giao" class="btn btn-outline-success btn-lg" data-original-title="Edit Task">
 			                             Đã giao
 			                            </a>
-			                            
+
 		                            </div>
 		                        </td>
 	                      </tr>
@@ -93,6 +95,7 @@
 	        		swal("Thông báo",message,"success");
 	        	}
 	        </script>
+		</div>
 	</article>
 </body>
 </html>

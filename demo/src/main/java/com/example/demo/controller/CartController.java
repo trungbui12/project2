@@ -1,12 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Account;
-import com.example.demo.entity.CartDetail;
-import com.example.demo.entity.Product;
-import com.example.demo.entity.Voucher;
-import com.example.demo.repository.CartDetailRepository;
-import com.example.demo.repository.ProductRepository;
-import com.example.demo.repository.VoucherRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
+import com.example.demo.service.GHNService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -17,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -29,7 +27,12 @@ public class CartController {
     VoucherRepository voucherRepository;
     @Autowired
     HttpSession session;
-
+    @Autowired
+    GHNService ghnService;
+    @Autowired
+    OrderRepository orderRepository;
+    @Autowired
+    OrderDetailRepository orderDetailRepository;
     @RequestMapping("/carts/add")
     public String add(RedirectAttributes redirectAttributes, @RequestParam("quantity") Integer quantity, @RequestParam("productSlug") String productSlug) {
         Account account = (Account) session.getAttribute("account");
@@ -65,7 +68,15 @@ public class CartController {
             return "redirect:/login";
         }
         List<CartDetail> cartDetails = cartDetailRepository.findByAccount(account);
-        List<Voucher> vouchers = voucherRepository.findVoucherValidList(Sort.by(Sort.Direction.DESC, "discountPercent"));
+        List<Integer>ids = new ArrayList<Integer>();
+        List<Order> orders = orderRepository.findByAccount(account);
+        for (Order order: orders){
+            if (order.getVoucher()!=null ){
+                ids.add(order.getVoucher().getId());
+            }
+
+        }
+        List<Voucher> vouchers = voucherRepository.findVoucherValidList(ids,Sort.by(Sort.Direction.DESC, "discountPercent"));
         model.addAttribute("cartDetails", cartDetails);
         model.addAttribute("vouchers", vouchers);
         return "cart";
@@ -103,6 +114,76 @@ public class CartController {
                 cartDetail.setQuantity(quantity);
             }
             cartDetailRepository.save(cartDetail);
+        }
+        return "redirect:/carts";
+    }
+    @RequestMapping("/carts/checkout")
+    public String checkout(@RequestParam("ids") String[]ids,
+                           @RequestParam("provinceSelect") int provinceSelect,
+                           @RequestParam("districtSelect") int districtSelect,
+                           @RequestParam("wardSelect") String wardSelect,
+                           @RequestParam("fullAddress") String fullAddress,
+                           @RequestParam("voucher") Integer voucherId,
+                           @RequestParam("paymentMethod") String paymentMethod){
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        int total = 0;
+        for (String id : ids){
+            CartDetail cartDetail = cartDetailRepository.findById(Integer.parseInt(id)).orElse(null);
+            total += cartDetail.getQuantity() * cartDetail.getProduct().getPrice();
+        }
+        Voucher voucher = voucherRepository.findById(voucherId).orElse(null);
+        int discount = total * voucher.getDiscountPercent()/100;
+
+
+        int feeShip = ghnService.getShippingFee(districtSelect, wardSelect);
+        Order order = new Order();
+        order.setCreatedAt(new Date());
+        order.setAccount(account);
+        order.setVoucher(voucher);
+        order.setDiscount(discount);
+        order.setFeeShip(feeShip);
+        order.setShipAddress(fullAddress);
+        order.setTotal(total);
+        if(paymentMethod.equals("COD")){
+            order.setPaymentMethod(0);
+            order.setPaymentStatus(0);
+            order.setStatus(1);
+            orderRepository.save(order);
+            for (String id : ids){
+                CartDetail cartDetail = cartDetailRepository.findById(Integer.parseInt(id)).orElse(null);
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setOrder(order);
+                orderDetail.setProduct(cartDetail.getProduct());
+                orderDetail.setPrice(cartDetail.getProduct().getPrice());
+                orderDetail.setQuantity(cartDetail.getQuantity());
+                orderDetailRepository.save(orderDetail);
+                cartDetailRepository.delete(cartDetail);
+            }
+            return "redirect:/orders/detail/" + order.getId();
+        }
+        if (paymentMethod.equals("VIETQR")) {
+            order.setPaymentMethod(1); // VietQR
+            order.setPaymentStatus(0); // chưa xác nhận thanh toán
+            order.setStatus(1);        // chờ xử lý
+        }
+
+        orderRepository.save(order);
+
+        for (String id : ids) {
+            CartDetail cartDetail = cartDetailRepository.findById(Integer.parseInt(id)).orElse(null);
+            if (cartDetail != null) {
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setOrder(order);
+                orderDetail.setProduct(cartDetail.getProduct());
+                orderDetail.setPrice(cartDetail.getProduct().getPrice());
+                orderDetail.setQuantity(cartDetail.getQuantity());
+                orderDetailRepository.save(orderDetail);
+                cartDetailRepository.delete(cartDetail);
+            }
+            return "redirect:/orders/detail/" + order.getId();
         }
         return "redirect:/carts";
     }

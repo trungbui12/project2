@@ -42,4 +42,5 @@ public class Favorite {
     public void setProduct(Product product) {
         this.product = product;
     }
+
 }

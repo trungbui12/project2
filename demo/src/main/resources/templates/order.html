@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/layout::view(~{::title},~{::main})}">
+<head>
+  <meta charset="UTF-8">
+  <title>Giỏ hàng</title>
+</head>
+<body>
+<main>
+  <!-- breadcrumb -->
+  <div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+      <a th:href="@{/}" class="stext-109 cl8 hov-cl1 trans-04">
+        Home
+        <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+      </a>
+
+      <span class="stext-109 cl4">
+					Order history
+				</span>
+    </div>
+  </div>
+
+
+  <!-- Shoping Cart -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-xl-12 m-lr-auto m-b-50">
+        <h4 class="mtext-109 cl2 p-b-30 text-center">
+            Order history
+        </h4>
+        <div class="wrap-table-shopping-cart">
+          <table class="table-shopping-cart">
+            <tr class="table_head">
+              <th class="text-center" width="5%"> </th>
+              <th class="ctext-center">Date</th>
+              <th class="ctext-center">Feeship</th>
+              <th class="ctext-center">Discount</th>
+              <th class="ctext-center">Total</th>
+              <th class="ctext-center">Payment </th>
+              <th class="ctext-center">Status</th>
+              <th class="ctext-center">Act</th>
+            </tr>
+            <th:block th:each="order,st:${orders}">
+              <tr class="table_row cart-item">
+                <td class="text-center" th:text="${st.count}">
+                </td>
+                <td class="text-center" th:text="${#dates.format(order.createdAt, 'dd-MM-yyyy')}">
+
+                </td>
+                <td class="text-center" th:text="${#numbers.formatDecimal(order.feeShip, 1, 'COMMA', 0, 'POINT') + 'đ'}">0đ</td>
+                <td class="text-center" th:text="${#numbers.formatDecimal(order.discount, 1, 'COMMA', 0, 'POINT') + 'đ'}">$ 36.00</td>
+                <td class="ctext-center" th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 0, 'POINT') + 'đ'}">
+                </td>
+                <td class="text-center line-total" th:text="${#numbers.formatDecimal(order.total + order.feeShip - order.discount, 1, 'COMMA', 0, 'POINT') + 'đ'}">0 đ</td>
+                <td class="ctext-center">
+										<span class="stext-110 cl2" th:if="${order.status == 1}">
+											<span class="text-danger">Wait for confirmation</span>
+										</span>
+                  <span class="stext-110 cl2" th:if="${order.status == 2}">
+											Processing
+										</span>
+                  <span class="stext-110 cl2" th:if="${order.status == 3}">
+											Shipping
+										</span>
+                  <span class="stext-110 cl2" th:if="${order.status == 4}">
+											Delivered
+										</span>
+                  <span class="stext-110 cl2" th:if="${order.status == 5}">
+											<span class="text-success">Complete</span>
+										</span>
+                  <span class="stext-110 cl2" th:if="${order.status == 6}">
+											<span class="text-danger">Cancel</span>
+										</span>
+                </td>
+
+                <td class="ctext-center">
+                  <a class="btn btn-danger" th:if="${order.status < 2}" th:href="@{|/orders/cancel/${order.id}|}">Cancel order</a>
+                  <a class="btn btn-success" th:if="${order.status == 4}" th:href="@{|/orders/receive/${order.id}|}">Receipt of delivery</a>
+                  <a class="btn btn-infor" th:href="@{|/orders/detail/${order.id}|}">Detail</a>
+                </td>
+              </tr>
+            </th:block>
+
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

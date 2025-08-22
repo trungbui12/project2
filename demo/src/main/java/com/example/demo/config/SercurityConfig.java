@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +35,7 @@ public class SercurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers("/","/css/**","/js/**","/fonts/**","/images/**","/vendor/**","/kaiadmin/**").permitAll()
                                 .requestMatchers("/","/register","/search","/products/**","/features/**","/blogs/**","/abouts/**","/contacts/**").permitAll()
-                                .requestMatchers("/favorites/**","/carts/**").hasAnyRole("USER","ADMIN")
+                                .requestMatchers("/favorites/**","/carts/**","/orders/**").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/error").permitAll()
                 )
@@ -56,5 +57,9 @@ public class SercurityConfig {
         daoAuthenticationProvider.setUserDetailsService(userDetailsService(passwordEncoder()));
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
+    }
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
     }
 }
