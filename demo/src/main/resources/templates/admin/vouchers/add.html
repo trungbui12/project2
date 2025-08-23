@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"   th:replace="~{/admin/layout::view(~{::title}, ~{::article})}" th:with="active=${active}">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý khuyến mãi</title>
+</head>
+<body>
+	<article>
+		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+			<div>
+				<h3 class="fw-bold mb-3">Quản lý khuyến mãi</h3>
+				<h6 class="op-7 mb-2"></h6>
+			</div>
+			<div class="ms-md-auto py-2 py-md-0">
+				<a th:href="@{/admin/vouchers}" class="btn btn-primary btn-round">Quay lại</a>
+			</div>
+		</div>
+		<div class="row">
+	        <div class="col-md-12">
+	          <div class="card">
+	            <div class="card-header">
+	              <h4 class="card-title">Thêm mới khuyến mãi</h4>
+	            </div>
+	            <div class="card-body">
+	              	<label class="text-danger" th:text="${message}"></label>
+                  	<form th:action="@{/admin/vouchers/add}" method="post" th:object="${voucher}">
+                  		<div class="form-group">
+                          	<label for="code">Mã giảm giá</label>
+                          	<input type="text" class="form-control" id="code" th:field="*{code}" placeholder="Mã giảm giá" required/>
+                        	<i class="text-danger" th:errors="*{code}"></i>
+                        	<label class="text-danger" for="code" th:text="${codeError}"></label>
+                        </div>
+                        <div class="form-group">
+                          	<label for="discountPercent">% giảm giá</label>
+                          	<input type="number" class="form-control" id="discountPercent" th:field="*{discountPercent}" placeholder="% giảm giá" required/>
+                        	<i class="text-danger" th:errors="*{discountPercent}"></i>
+                        </div>
+                        <div class="form-group">
+                          	<label for="quantity">Số lượng</label>
+                          	<input type="number" class="form-control" id="quantity" th:field="*{quantity}" placeholder="Số lượng" required/>
+                        	<i class="text-danger" th:errors="*{quantity}"></i>
+                        </div>
+                        <div class="form-group">
+                          	<label for="startedAt">Ngày bắt đầu</label>
+                          	<input type="date" class="form-control" id="startedAt" th:field="*{startedAt}" required/>
+                        	<i class="text-danger" th:errors="*{startedAt}"></i>
+                        </div>
+                        <div class="form-group">
+                          	<label for="endAt">Ngày kết thúc</label>
+                          	<input type="date" class="form-control" id="endAt" th:field="*{endAt}" required/>
+                        	<i class="text-danger" th:errors="*{endAt}"></i>
+                        </div>
+                        <div class="card-action">
+		                    <button class="btn btn-success">Lưu</button>
+		                    <a th:href="@{/admin/vouchers}" class="btn btn-danger">Hủy</a>
+		                 </div>
+                  	</form>  
+	            </div>
+	          </div>
+	        </div>
+	        <script type="text/javascript">
+	        	$('#name').on('change', function(){
+	        		var str = removeUTF8($('#name').val());
+	        		$('#slug').val(str);
+	        	});
+	        	
+	        	$('#startedAt').on('change', function(){
+					const input = document.getElementById("startedAt");
+					const startDate = new Date(document.getElementById("startedAt").value);
+					const now = new Date();
+					now.setHours(0, 0, 0, 0);
+				    startDate.setHours(0, 0, 0, 0);
+				    if (startDate < now) {
+				        alert("Ngày bắt đầu không được nhỏ hơn ngày hiện tại!");
+				        $('#startedAt').val(now);
+				    }
+				});
+				
+				$('#endAt').on('change', function(){
+					const startDate = new Date(document.getElementById("startedAt").value);
+				    const endDate = new Date(document.getElementById("endAt").value);
+
+				    if (startDate > endDate) {
+				        alert("Ngày kết thúc không được nhỏ hơn ngày bắt đầu!");
+				        document.getElementById("endAt").value = startDate;
+				    }
+				});
+	        </script>	
+	</article>
+</body>
+</html>
