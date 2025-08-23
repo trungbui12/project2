@@ -35,7 +35,7 @@ public class SercurityConfig {
                                 .requestMatchers("/","/css/**","/js/**","/fonts/**",
                                         "/images/**","/vendor/**","/kaiadmin/**","/",
                                         "/register","/search","/products/**","/features/**",
-                                        "/blogs","/blogs/**","/abouts/**","/contacts/**").permitAll()
+                                        "/blogs","/blogs/**","/about/**","/about","/contacts","/contacts/**").permitAll()
 //                                .requestMatchers("/","/register","/search","/products/**","/features/**","/blogs/**","/abouts/**","/contacts/**").permitAll()
                                 .requestMatchers("/favorites/**","/carts/**").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/admin/**").hasRole("ADMIN")

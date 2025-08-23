@@ -21,13 +21,13 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
      Integer id;
 
-    @Column(columnDefinition = "nvarchar(60)")
+    @Column(columnDefinition = "varchar(60) CHARACTER SET utf8mb4")
     @NotBlank(message = "chua nhap ten san pham")
      String name;
      String slug;
-    @Column(columnDefinition = "nvarchar(max)")
+    @Column(columnDefinition = "TEXT CHARACTER SET utf8mb4")
      String description;
-    @Column(columnDefinition = "nvarchar(255)")
+    @Column(columnDefinition = "varchar(255) CHARACTER SET utf8mb4")
     String image;
     @NotNull(message = "chua nhap gia san pham")
     @Positive(message = "Gia phai lon hon 0")
