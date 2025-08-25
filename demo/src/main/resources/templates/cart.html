@@ -91,9 +91,10 @@
               </div>
 
               <div class="size-209">
-								<span class="mtext-110 cl2" id="totalAmount" >
-									0 đ
-								</span>
+                    <span class="mtext-110 cl2" id="totalAmount"
+                          th:text="${#numbers.formatDecimal(total, 1, 'COMMA', 0, 'POINT') + 'đ'}">
+                        0 đ
+                    </span>
               </div>
             </div>
 
