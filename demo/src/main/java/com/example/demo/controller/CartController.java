@@ -33,6 +33,9 @@ public class CartController {
     OrderRepository orderRepository;
     @Autowired
     OrderDetailRepository orderDetailRepository;
+
+
+
     @RequestMapping("/carts/add")
     public String add(RedirectAttributes redirectAttributes, @RequestParam("quantity") Integer quantity, @RequestParam("productSlug") String productSlug) {
         Account account = (Account) session.getAttribute("account");
@@ -41,7 +44,7 @@ public class CartController {
         }
         Product product = productRepository.findByActiveAndSlug(true, productSlug);
         if (product == null) {
-            return "redirect:/carts";
+            return "redirect:/carts/cartdemo";
         }
 
         CartDetail cartDetail = cartDetailRepository.findByAccountAndProduct(account, product);
@@ -58,7 +61,65 @@ public class CartController {
             return "redirect:/products/" + productSlug;
         }
         cartDetailRepository.save(cartDetail);
-        return "redirect:/carts";
+        return "redirect:/carts/cartdemo";
+    }
+
+    @RequestMapping("/carts/cartdemo")
+    public String cartdemo(Model model) {
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        List<CartDetail> cartDetails = cartDetailRepository.findByAccount(account);
+        List<Integer>ids = new ArrayList<Integer>();
+        List<Order> orders = orderRepository.findByAccount(account);
+        for (Order order: orders){
+            if (order.getVoucher()!=null ){
+                ids.add(order.getVoucher().getId());
+            }
+
+        }
+        List<Voucher> vouchers = voucherRepository.findVoucherValidList(ids,Sort.by(Sort.Direction.DESC, "discountPercent"));
+        model.addAttribute("cartDetails", cartDetails);
+        model.addAttribute("vouchers", vouchers);
+        return "cartdemo";
+    }
+
+    @RequestMapping("/carts/cartdemo/remove/{id}")
+    public String removedemo(Model model, @PathVariable("id") Integer id) {
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        CartDetail cartDetail = cartDetailRepository.findById(id).orElse(null);
+        if (account.getId() != cartDetail.getAccount().getId()) {
+            return "redirect:/carts/cartdemo";
+        }
+        cartDetailRepository.delete(cartDetail);
+        return "redirect:/carts/cartdemo";
+    }
+
+    @RequestMapping("/carts/cartdemo/update")
+    public String updatedemo(RedirectAttributes redirectAttributes, @RequestParam("id") Integer id, @RequestParam("quantity")Integer quantity) {
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        CartDetail cartDetail = cartDetailRepository.findById(id).orElse(null);
+        if (account.getId() != cartDetail.getAccount().getId()) {
+            return "redirect:/carts/cartdemo";
+        }
+        if (cartDetail != null){
+
+            if (quantity > cartDetail.getProduct().getQuantity()){
+                redirectAttributes.addFlashAttribute("errorQuantity", cartDetail.getId());
+                cartDetail.setQuantity(cartDetail.getProduct().getQuantity());
+            }else {
+                cartDetail.setQuantity(quantity);
+            }
+            cartDetailRepository.save(cartDetail);
+        }
+        return "redirect:/carts/cartdemo";
     }
 
     @RequestMapping("/carts")
@@ -119,6 +180,9 @@ public class CartController {
     }
     @RequestMapping("/carts/checkout")
     public String checkout(@RequestParam("ids") String[]ids,
+                           @RequestParam("customerName") String fullName,
+                           @RequestParam("customerPhone") String phoneNumber,
+                           @RequestParam("customerEmail") String email,
                            @RequestParam("provinceSelect") int provinceSelect,
                            @RequestParam("districtSelect") int districtSelect,
                            @RequestParam("wardSelect") String wardSelect,
@@ -147,6 +211,9 @@ public class CartController {
         order.setFeeShip(feeShip);
         order.setShipAddress(fullAddress);
         order.setTotal(total);
+        order.setFullName(fullName);
+        order.setPhoneNumber(phoneNumber);
+        order.setEmail(email);
         if(paymentMethod.equals("COD")){
             order.setPaymentMethod(0);
             order.setPaymentStatus(0);

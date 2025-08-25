@@ -29,6 +29,13 @@ public class Product {
      String description;
     @Column(columnDefinition = "nvarchar(255)")
     String image;
+
+    @Column(columnDefinition = "nvarchar(255)")
+    String image2;
+
+    @Column(columnDefinition = "nvarchar(255)")
+    String image3;
+
     @NotNull(message = "chua nhap gia san pham")
     @Positive(message = "Gia phai lon hon 0")
      Integer price;
@@ -47,6 +54,8 @@ public class Product {
     List<Favorite> favorites;
     @OneToMany(mappedBy = "product")
     List<CartDetail> cartDetails;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 
     public Boolean getActive() {
         return active;
@@ -150,5 +159,29 @@ public class Product {
 
     public void setSizes(String sizes) {
         this.sizes = sizes;
+    }
+
+    public String getImage2() {
+        return image2;
+    }
+
+    public void setImage2(String image2) {
+        this.image2 = image2;
+    }
+
+    public String getImage3() {
+        return image3;
+    }
+
+    public void setImage3(String image3) {
+        this.image3 = image3;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

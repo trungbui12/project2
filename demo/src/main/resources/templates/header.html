@@ -9,60 +9,49 @@
         </div>
 
         <div class="right-top-bar flex-w h-full">
-          <a href="#" class="flex-c-m trans-04 p-lr-25">
-            Help & FAQs
-          </a>
+          <a href="#" class="flex-c-m trans-04 p-lr-25">Help & FAQs</a>
 
-          <a th:if="${session.account !=null}" th:href="@{/edit-profile}" class="flex-c-m trans-04 p-lr-25" th:text="${session.account.fullname}">
+          <a th:if="${session.account != null}"
+             th:href="@{/edit-profile}"
+             class="flex-c-m trans-04 p-lr-25"
+             th:text="${session.account.fullname}">My Account</a>
 
-          </a>
+          <a th:if="${session.account == null}"
+             th:href="@{/login}"
+             class="flex-c-m trans-04 p-lr-25">My Account</a>
 
-          <a th:if="${session.account ==null}" th:href="@{/login}" class="flex-c-m trans-04 p-lr-25">
-            My Account
-          </a>
-
-          <a href="#" class="flex-c-m trans-04 p-lr-25">
-            EN
-          </a>
-
-          <a href="#" class="flex-c-m trans-04 p-lr-25">
-            USD
-          </a>
+          <a href="#" class="flex-c-m trans-04 p-lr-25">EN</a>
+          <a href="#" class="flex-c-m trans-04 p-lr-25">USD</a>
         </div>
       </div>
     </div>
 
+    <!-- Menu desktop -->
     <div class="wrap-menu-desktop">
       <nav class="limiter-menu-desktop container">
-
-        <!-- Logo desktop -->
+        <!-- Logo -->
         <a th:href="@{/}" class="logo">
           <img th:src="@{/images/icons/logo-01.png}" alt="IMG-LOGO">
         </a>
 
-        <!-- Menu desktop -->
+        <!-- Menu -->
         <div class="menu-desktop">
           <ul class="main-menu">
             <li th:class="${active == 'home'?'active-menu':''}">
               <a th:href="@{/}">Home</a>
             </li>
-
             <li th:class="${active == 'product'?'active-menu':''}">
               <a th:href="@{/products}">Shop</a>
             </li>
-
             <li th:class="${active == 'feature'?'active-menu':''}">
-              <a th:href="@{/features}">Features</a>
+              <a th:href="@{/orders}">Order</a>
             </li>
-
             <li th:class="${active == 'blog'?'active-menu':''}">
               <a th:href="@{/blogs}">Blog</a>
             </li>
-
             <li th:class="${active == 'about'?'active-menu':''}">
               <a th:href="@{/abouts}">About</a>
             </li>
-
             <li th:class="${active == 'contact'?'active-menu':''}">
               <a th:href="@{/contacts}">Contact</a>
             </li>
@@ -71,14 +60,15 @@
 
         <!-- Icon header -->
         <div class="wrap-icon-header flex-w flex-r-m">
-
-
-          <a th:href="@{/carts}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti">
+          <!-- Cart -->
+          <a th:href="@{/carts}" class="icon-header">
             <i class="zmdi zmdi-shopping-cart"></i>
-          </a>
 
-          <a th:href="@{/favorites}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti">
+          </a>
+          <!-- Favorite -->
+          <a th:href="@{/favorites}" class="icon-header">
             <i class="zmdi zmdi-favorite-outline"></i>
+
           </a>
         </div>
       </nav>
@@ -87,109 +77,60 @@
 
   <!-- Header Mobile -->
   <div class="wrap-header-mobile">
-    <!-- Logo moblie -->
+    <!-- Logo -->
     <div class="logo-mobile">
-      <a th:href="@{/}"><img th:src="@{/images/icons/logo-01.png}" alt="IMG-LOGO"></a>
+      <a th:href="@{/}">
+        <img th:src="@{/images/icons/logo-01.png}" alt="IMG-LOGO">
+      </a>
     </div>
 
-    <!-- Icon header -->
+    <!-- Icon -->
     <div class="wrap-icon-header flex-w flex-r-m m-r-15">
-      <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
-        <i class="zmdi zmdi-search"></i>
+      <div class="icon-header">
+        <i class="zmdi zmdi-search js-show-modal-search"></i>
       </div>
-
-      <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
+      <a th:href="@{/carts}" class="icon-header">
         <i class="zmdi zmdi-shopping-cart"></i>
-      </div>
-
-      <a th:href="@{/favorites}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
+        <span id="cart-count-m" class="icon-badge"
+              th:text="${session.cart != null ? session.cart.totalItems : 0}">0</span>
+      </a>
+      <a th:href="@{/favorites}" class="icon-header">
         <i class="zmdi zmdi-favorite-outline"></i>
+        <span id="fav-count-m" class="icon-badge"
+              th:text="${session.favorites != null ? session.favorites.size() : 0}">0</span>
       </a>
     </div>
 
     <!-- Button show menu -->
     <div class="btn-show-menu-mobile hamburger hamburger--squeeze">
-				<span class="hamburger-box">
-					<span class="hamburger-inner"></span>
-				</span>
-    </div>
-  </div>
-
-
-  <!-- Menu Mobile -->
-  <div class="menu-mobile">
-    <ul class="topbar-mobile">
-      <li>
-        <div class="left-top-bar">
-          Free shipping for standard order over $100
-        </div>
-      </li>
-
-      <li>
-        <div class="right-top-bar flex-w h-full">
-          <a href="#" class="flex-c-m p-lr-10 trans-04">
-            Help & FAQs
-          </a>
-
-          <a href="#" class="flex-c-m p-lr-10 trans-04">
-            My Account
-          </a>
-
-          <a href="#" class="flex-c-m p-lr-10 trans-04">
-            EN
-          </a>
-
-          <a href="#" class="flex-c-m p-lr-10 trans-04">
-            USD
-          </a>
-        </div>
-      </li>
-    </ul>
-
-    <ul class="main-menu-m">
-      <li th:class="${active == 'home'?'active-menu':''}">
-        <a th:href="@{/}">Home</a>
-
-        <span class="arrow-main-menu-m">
-						<i class="fa fa-angle-right" aria-hidden="true"></i>
-					</span>
-      </li>
-
-      <li th:class="${active == 'product'?'active-menu':''}">
-        <a th:href="@{/products}">Shop</a>
-      </li>
-
-      <li>
-        <a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a>
-      </li>
-
-      <li >
-        <a href="blog.html">Blog</a>
-      </li>
-
-      <li th:class="${active == 'about'?'active-menu':''}">
-        <a th:href="@{/abouts}">About</a>
-      </li>
-
-      <li th:class="${active == 'contact'?'active-menu':''}">
-        <a th:href="@{/contacts}">Contact</a>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Modal Search -->
-  <div class="modal-search-header flex-c-m trans-04 js-hide-modal-search">
-    <div class="container-search-header">
-      <button class="flex-c-m btn-hide-modal-search trans-04 js-hide-modal-search">
-        <img src="images/icons/icon-close2.png" alt="CLOSE">
-      </button>
-
-      <form class="wrap-search-header flex-w p-l-15">
-        <button class="flex-c-m trans-04">
-          <i class="zmdi zmdi-search"></i>
-        </button>
-        <input class="plh3" type="text" name="search" placeholder="Search...">
-      </form>
+      <span class="hamburger-box"><span class="hamburger-inner"></span></span>
     </div>
   </div>
 </header>
+
+<!-- CSS Badge -->
+<style>
+  .icon-header {
+    position: relative;
+    font-size: 22px;
+    margin-left: 15px;
+    color: #333;
+    transition: 0.3s;
+  }
+  .icon-header:hover {
+    color: #6675FF !important;
+    transform: scale(1.1);
+  }
+  .icon-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #ff4d4d;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 6px;
+    line-height: 1;
+  }
+</style>

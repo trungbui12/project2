@@ -29,39 +29,66 @@
                         <div class="form-group">
                           	<label th:text="${'Ngày đặt hàng: ' + #dates.format(order.createdAt,'dd-MM-yyyy')}">Slug</label>
                         </div>
-                        
+
                         <div class="form-group">
                           	<label th:text="${'Tổng tiền: ' + #numbers.formatDecimal(order.total, 1,'COMMA', 0, 'POINT') + 'đ'}">Mô tả</label>
                         </div>
-                        
+
                         <div class="form-group">
                           	<label th:text="${'Phí vận chuyển: ' + #numbers.formatDecimal(order.feeShip, 1,'COMMA', 0, 'POINT') + 'đ'}">Số lượng</label>
                         </div>
                         <div class="form-group">
                           	<label th:text="${'Giảm giá: ' + #numbers.formatDecimal(order.discount, 1,'COMMA', 0, 'POINT') + 'đ'}">Giá</label>
                         </div>
-                        <div class="form-group">
-                          	<span th:if="${order.status == 1}">
-								Trạng thái đơn hàng: <span class="text-danger">Chờ xác nhận</span>
-							</span>
-							<span th:if="${order.status == 2}">
-								Trạng thái đơn hàng: Đang xử lý
-							</span>
-							<span th:if="${order.status == 3}">
-								Trạng thái đơn hàng: Đang vận chuyển
-							</span>
-							<span th:if="${order.status == 4}">
-								Trạng thái đơn hàng: <span class="text-danger">Đã giao</span>
-							</span>
-							<span th:if="${order.status == 5}">
-								Trạng thái đơn hàng: Hoàn thành
-							</span>
-							<span th:if="${order.status == 6}">
-								Trạng thái đơn hàng: <span class="text-danger">Hủy</span>
-							</span>
-                        </div>
-                  	</div>
-                  	
+						<div class="form-group">
+							<p>
+      <span th:if="${order.status == 1}">
+         Trạng thái đơn hàng: <span class="text-danger">Chờ xác nhận</span>
+      </span>
+								<span th:if="${order.status == 2}">
+         Trạng thái đơn hàng: Đang xử lý
+      </span>
+								<span th:if="${order.status == 3}">
+         Trạng thái đơn hàng: Đang vận chuyển
+      </span>
+								<span th:if="${order.status == 4}">
+         Trạng thái đơn hàng: <span class="text-danger">Đã giao</span>
+      </span>
+								<span th:if="${order.status == 5}">
+         Trạng thái đơn hàng: Hoàn thành
+      </span>
+								<span th:if="${order.status == 6}">
+         Trạng thái đơn hàng: <span class="text-danger">Hủy</span>
+      </span>
+							</p>
+
+							<!-- Nút xử lý trạng thái -->
+							<div class="form-button-action">
+								<a th:if="${order.status == 1}"
+								   th:href="@{|/admin/orders/updateStatus/${order.id}/2|}"
+								   class="btn btn-primary btn-sm">
+									Xác nhận
+								</a>
+								<a th:if="${order.status == 1}"
+								   th:href="@{|/admin/orders/updateStatus/${order.id}/6|}"
+								   class="btn btn-danger btn-sm">
+									Hủy đơn
+								</a>
+								<a th:if="${order.status == 2}"
+								   th:href="@{|/admin/orders/updateStatus/${order.id}/3|}"
+								   class="btn btn-success btn-sm">
+									Đang vận chuyển
+								</a>
+								<a th:if="${order.status == 3}"
+								   th:href="@{|/admin/orders/updateStatus/${order.id}/4|}"
+								   class="btn btn-outline-success btn-sm">
+									Đã giao
+								</a>
+							</div>
+						</div>
+
+					</div>
+
                   	<h4>Chi tiết đơn hàng</h4>
                   	<div class="table-responsive">
 	                <table
@@ -89,7 +116,7 @@
 		                        <td th:text="${#numbers.formatDecimal(orderDetail.price, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
 		                        <td th:text="${#numbers.formatDecimal(orderDetail.quantity, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
 		                        <td th:text="${#numbers.formatDecimal(orderDetail.price * orderDetail.quantity, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
-		                        
+
 	                      </tr>
 	                  	</th:block>
 	                  </tbody>

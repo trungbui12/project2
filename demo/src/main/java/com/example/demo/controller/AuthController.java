@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Account;
+import com.example.demo.entity.Contact;
 import com.example.demo.repository.AccountRepository;
+import com.example.demo.repository.ContactRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -16,6 +19,9 @@ public class AuthController {
     AccountRepository accountRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    ContactRepository contactRepository;
+
     @GetMapping("/login")
     public String login() {
         // Trả về tên file template (admin.html)
@@ -53,10 +59,25 @@ public class AuthController {
         // Trả về tên file template (admin.html)
         return "about";
     }
+
     @GetMapping("/contacts")
-    public String contact() {
-        // Trả về tên file template (admin.html)
+    public String contactForm() {
         return "contact";
+    }
+
+    @PostMapping("/contacts")
+    public String submitContact(@ModelAttribute Contact contact, HttpSession session) {
+        // Nếu người dùng đang đăng nhập, gán account
+        Account account = (Account) session.getAttribute("account");
+        if (account != null) {
+            contact.setAccount(account);
+        }
+
+        // Lưu vào database
+        contactRepository.save(contact);
+
+        // Redirect hoặc thông báo thành công
+        return "redirect:/contacts?success";
     }
 
 }

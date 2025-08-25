@@ -27,6 +27,12 @@ public class Order {
     int status;
     @Column(columnDefinition = "nvarchar(500)")
     String shipAddress;
+    @Column(columnDefinition = "nvarchar(255)")
+    String fullName;
+    @Column(length = 10)
+    String phoneNumber;
+    @Column(length = 100)
+    String email;
     @ManyToOne @JoinColumn(name = "account_id")
     Account account;
     @ManyToOne @JoinColumn(name = "voucher_id")
@@ -128,5 +134,29 @@ public class Order {
 
     public void setVoucher(Voucher voucher) {
         this.voucher = voucher;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

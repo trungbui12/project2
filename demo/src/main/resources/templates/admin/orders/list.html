@@ -11,9 +11,6 @@
 				<h3 class="fw-bold mb-3">Quản lý đơn hàng</h3>
 				<h6 class="op-7 mb-2"></h6>
 			</div>
-			<div class="ms-md-auto py-2 py-md-0">
-				<a th:href="@{/admin/orders/add}" class="btn btn-primary btn-round">Thêm mới</a>
-			</div>
 		</div>
 		<div class="row">
 	        <div class="col-md-12">
@@ -45,7 +42,7 @@
 	                  	<th:block th:each="order:${orders}">
 	                  		<tr th:object="${order}">
 		                        <td th:text="*{id}"></td>
-		                        <td th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy')}"></td>
+		                        <td th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></td>
 		                        <td th:text="*{account.fullname + ' ' + account.phone}"></td>
 								<td th:text="*{shipAddress}"></td> <!-- Hiển thị shipAddress -->
 		                        <td th:text="${#numbers.formatDecimal(order.feeShip, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>

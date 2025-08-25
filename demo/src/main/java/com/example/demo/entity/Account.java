@@ -38,6 +38,16 @@ public class Account {
     List<Favorite> favorites;
     @OneToMany(mappedBy = "account")
     List<CartDetail> cartDetails;
+    @OneToMany(mappedBy = "account")
+    List<Contact> contacts;
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
+    }
 
     public Integer getId() {
         return id;

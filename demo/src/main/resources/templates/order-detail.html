@@ -10,12 +10,12 @@
     <div class="container">
         <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
             <a th:href="@{/orders}" class="stext-109 cl8 hov-cl1 trans-04">
-                Đơn hàng
+                Order
                 <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
             </a>
 
             <span class="stext-109 cl4">
-					Chi tiết đơn hàng
+					Order-Detail
 				</span>
         </div>
     </div>
@@ -24,70 +24,74 @@
         <div class="row">
             <div class="col-lg-12 col-xl-12 m-lr-auto m-b-50">
                 <h4 class="mtext-109 cl2 p-b-30 text-center">
-                    Chi tiết đơn hàng
+                    Order details
                 </h4>
                 <div class="flex-w flex-t bor12 p-b-13">
                     <div class="size-209">
-							<span class="stext-110 cl2" th:text="${'Mã đơn hàng: #' + order.id}">
+							<span class="stext-110 cl2" th:text="${'Code: #' + order.id}">
 							</span>
                     </div>
                     <div class="size-209">
-							<span class="stext-110 cl2" th:text="${'Ngày đặt hàng: ' + #dates.format(order.createdAt,'dd-MM-yyyy')}">
+							<span class="stext-110 cl2" th:text="${'Date: ' + #dates.format(order.createdAt,'dd-MM-yyyy')}">
 							</span>
                     </div>
                     <div class="size-209">
-							<span class="stext-110 cl2" th:text="${'Tổng tiền: ' + #numbers.formatDecimal(order.total, 1,'COMMA', 0, 'POINT') + 'đ'}">
+							<span class="stext-110 cl2" th:text="${'Time: ' + #dates.format(order.createdAt,'HH:mm:ss')}">
 							</span>
                     </div>
                     <div class="size-209">
-							<span class="stext-110 cl2" th:text="${'Phí vận chuyển: ' + #numbers.formatDecimal(order.feeShip, 1,'COMMA', 0, 'POINT') + 'đ'}">
+							<span class="stext-110 cl2" th:text="${'Total: ' + #numbers.formatDecimal(order.total, 1,'COMMA', 0, 'POINT') + 'đ'}">
 							</span>
                     </div>
                     <div class="size-209">
-							<span class="stext-110 cl2" th:text="${'Giảm giá: ' + #numbers.formatDecimal(order.discount, 1,'COMMA', 0, 'POINT') + 'đ'}">
+							<span class="stext-110 cl2" th:text="${'Shipping fee: ' + #numbers.formatDecimal(order.feeShip, 1,'COMMA', 0, 'POINT') + 'đ'}">
+							</span>
+                    </div>
+                    <div class="size-209">
+							<span class="stext-110 cl2" th:text="${'Discount: ' + #numbers.formatDecimal(order.discount, 1,'COMMA', 0, 'POINT') + 'đ'}">
 							</span>
                     </div>
 
                     <div class="size-209">
 							<span class="stext-110 cl2" th:if="${order.status == 1}">
-								Trạng thái đơn hàng: <span class="text-danger">Chờ xác nhận</span>
+                                Order status: <span class="text-danger">Wait for confirmation</span>
 							</span>
                         <span class="stext-110 cl2" th:if="${order.status == 2}">
-								Trạng thái đơn hàng: Đang xử lý
+								Order status: Processing
 							</span>
                         <span class="stext-110 cl2" th:if="${order.status == 3}">
-								Trạng thái đơn hàng: Đang vận chuyển
+								Order status: Shipping
 							</span>
                         <span class="stext-110 cl2" th:if="${order.status == 4}">
-								Trạng thái đơn hàng: Đã giao
+								Order status: Delivered
 							</span>
                         <span class="stext-110 cl2" th:if="${order.status == 5}">
-								Trạng thái đơn hàng: Hoàn thành
+								Order status: Complete
 							</span>
                         <span class="stext-110 cl2" th:if="${order.status == 6}">
-								Trạng thái đơn hàng: <span class="text-danger">Hủy</span>
+								Order status: <span class="text-danger">Cancel</span>
 							</span>
                     </div>
                     <div class="size-209">
-                        <a class="btn btn-danger" th:href="@{|/orders/cancel/${order.id}|}">Hủy đơn</a>
+                        <a class="btn btn-danger" th:href="@{|/orders/cancel/${order.id}|}">Cancel</a>
                     </div>
                 </div>
 
             </div>
             <div class="col-lg-12 col-xl-12 m-lr-auto m-b-50">
                 <h4 class="mtext-109 cl2 p-b-30 text-center">
-                    Chi tiết đơn hàng
+                    Order-Detail
                 </h4>
                 <div class="m-l-25 m-r--38 m-lr-0-xl">
                     <div class="wrap-table-shopping-cart">
                         <table class="table-shopping-cart">
                             <tr class="table_head">
                                 <th class="text-center" width="5%">#</th>
-                                <th class="column-1">Sản phẩm</th>
+                                <th class="column-1">Product</th>
                                 <th class="column-2"></th>
-                                <th class="column-3">Giá</th>
-                                <th class="column-4">Số lượng</th>
-                                <th class="column-5">Thành tiền</th>
+                                <th class="column-3">Price</th>
+                                <th class="column-4">Quantity</th>
+                                <th class="column-5">Subtotal</th>
                             </tr>
                             <th:block th:each="orderDetail,st:${order.orderDetails}">
                                 <tr class="table_row cart-item">

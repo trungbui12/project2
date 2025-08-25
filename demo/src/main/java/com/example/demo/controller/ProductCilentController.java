@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Product;
+import com.example.demo.entity.Review;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +47,27 @@ public class ProductCilentController {
         if (product != null){
             List<Product> relateProducts = productRepository.findByActiveAndCategory(true, product.getCategory(), Sort.by(Sort.Direction.DESC, "id"));
             model.addAttribute("relateProducts", relateProducts);
+            model.addAttribute("reviews", product.getReviews()); // Add this line
         }
         return "product-detail";
     }
+@PostMapping("/products/{slug}/review")
+public String addReview(@PathVariable("slug") String slug,
+                        @RequestParam String name,
+                        @RequestParam String email,
+                        @RequestParam int rating,
+                        @RequestParam String content) {
+    Product product = productRepository.findByActiveAndSlug(true, slug);
+    if (product != null) {
+        Review review = new Review();
+        review.setName(name);
+        review.setEmail(email);
+        review.setRating(rating);
+        review.setContent(content);
+        review.setProduct(product);
+        product.getReviews().add(review);
+        productRepository.save(product);
+    }
+    return "redirect:/products/" + slug;
+}
 }
