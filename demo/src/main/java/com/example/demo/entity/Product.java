@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -29,6 +30,15 @@ public class Product {
      String description;
     @Column(columnDefinition = "nvarchar(255)")
     String image;
+
+    @Column(columnDefinition = "nvarchar(255)")
+    String image2;
+
+    @Column(columnDefinition = "nvarchar(255)")
+    String image3;
+
+    @Column(columnDefinition = "nvarchar(255)")
+    String sizeGuide;
     @NotNull(message = "chua nhap gia san pham")
     @Positive(message = "Gia phai lon hon 0")
      Integer price;
@@ -47,6 +57,14 @@ public class Product {
     List<Favorite> favorites;
     @OneToMany(mappedBy = "product")
     List<CartDetail> cartDetails;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
+    public List<String> getSizeList() {
+        if (this.sizes != null && !this.sizes.isEmpty()) {
+            return Arrays.asList(this.sizes.split(",")); // ví dụ: "S,M,L,XL" -> [S, M, L, XL]
+        }
+        return List.of();
+    }
 
     public Boolean getActive() {
         return active;
@@ -150,5 +168,37 @@ public class Product {
 
     public void setSizes(String sizes) {
         this.sizes = sizes;
+    }
+
+    public String getImage2() {
+        return image2;
+    }
+
+    public void setImage2(String image2) {
+        this.image2 = image2;
+    }
+
+    public String getImage3() {
+        return image3;
+    }
+
+    public void setImage3(String image3) {
+        this.image3 = image3;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public String getSizeGuide() {
+        return sizeGuide;
+    }
+
+    public void setSizeGuide(String sizeGuide) {
+        this.sizeGuide = sizeGuide;
     }
 }

@@ -1975,7 +1975,68 @@ input.num-product::-webkit-inner-spin-button {
   color: #555;
   line-height: 1.6;
 }
+    .table-shopping-cart th.column-6,
+       .table-shopping-cart td.column-6 {
+           width: 80px;        /* thu nhỏ lại */
+           text-align: center; /* căn giữa chữ */
+       }
 
+       /* Style cho chữ Size */
+       .table-shopping-cart td.column-6 span {
+           display: inline-block;
+           padding: 3px 8px;
+           font-size: 12px;
+           font-weight: 600;
+           color: #fff;
+           background-color: #6c757d; /* nền xám nhạt */
+           border-radius: 10px;       /* bo tròn */
+           text-transform: uppercase; /* in hoa */
+           min-width: 28px;           /* giữ cân đối */
+       }
+       .table-shopping-cart th.column-2,
+           .table-shopping-cart td.column-2 {
+               width: 400px;         /* tăng độ rộng cho tên sản phẩm */
+               white-space: normal;  /* cho phép xuống dòng */
+               word-wrap: break-word; /* tự động ngắt khi dài */
+           }
+
+  .table-shopping-cart th.column-4,
+     .table-shopping-cart td.column-4 {
+         width: 180px;          /* tăng độ rộng ô */
+         text-align: center;    /* căn giữa nội dung */
+     }
+
+     /* Input số lượng và nút +/- */
+     .table-shopping-cart td.column-4 .wrap-num-product {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         gap: 5px;              /* khoảng cách giữa các nút */
+     }
+
+     .table-shopping-cart td.column-4 .btn-num-product-up,
+     .table-shopping-cart td.column-4 .btn-num-product-down {
+         width: 35px;           /* kích thước nút +/- */
+         height: 35px;
+         text-align: center;
+         font-size: 16px;
+     }
+
+     .table-shopping-cart td.column-4 input {
+         width: 50px;           /* ô nhập số lượng rộng hơn */
+         text-align: center;
+     }
+         .table-shopping-cart th.column-5,
+         .table-shopping-cart td.column-5 {
+             text-align: center;   /* căn giữa chữ và số tiền */
+             width: 160px;         /* cố định chiều rộng cho cân */
+         }
+
+         /* Style số tiền cho đẹp hơn */
+         .table-shopping-cart td.column-5 {
+             font-weight: 600;
+             color: #333;
+         }
 
 
 /*//////////////////////////////////////////////////////////////////

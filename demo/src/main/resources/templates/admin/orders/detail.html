@@ -1,104 +1,140 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"   th:replace="~{/admin/layout::view(~{::title}, ~{::article})}" th:with="active=${active}">
+<html xmlns:th="http://www.thymeleaf.org"
+	  th:replace="~{/admin/layout::view(~{::title}, ~{::article})}"
+	  th:with="active=${active}">
 <head>
-<meta charset="UTF-8">
-<title>Quản lý đơn hàng</title>
+	<meta charset="UTF-8">
+	<title>Order Management</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-	<article>
-		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-			<div>
-				<h3 class="fw-bold mb-3">Chi tiết đơn hàng</h3>
-				<h6 class="op-7 mb-2"></h6>
-			</div>
-			<div class="ms-md-auto py-2 py-md-0">
-				<a th:href="@{/admin/orders}" class="btn btn-primary btn-round">Quay lại</a>
+<article>
+	<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+		<div>
+			<h3 class="fw-bold mb-3">Order Details</h3>
+		</div>
+		<div class="ms-md-auto py-2 py-md-0">
+			<a th:href="@{/admin/orders}" class="btn btn-primary btn-round">Back</a>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Order Details</h4>
+				</div>
+				<div class="card-body" th:object="${order}">
+					<!-- Order Info -->
+					<div class="form-group">
+						<label th:text="${'Order ID: #' + order.id}">Order ID</label>
+					</div>
+					<div class="form-group">
+						<label th:text="${'Order Date: ' + #dates.format(order.createdAt,'dd-MM-yyyy')}">Order Date</label>
+					</div>
+					<div class="form-group">
+						<label th:text="${'Total: ' + #numbers.formatDecimal(order.total,1,'COMMA',0,'POINT') + 'đ'}">Total</label>
+					</div>
+					<div class="form-group">
+						<label th:text="${'Shipping Fee: ' + #numbers.formatDecimal(order.feeShip,1,'COMMA',0,'POINT') + 'đ'}">Shipping Fee</label>
+					</div>
+					<div class="form-group">
+						<label th:text="${'Discount: ' + #numbers.formatDecimal(order.discount,1,'COMMA',0,'POINT') + 'đ'}">Discount</label>
+					</div>
+
+					<!-- Status and Actions -->
+					<div class="form-group">
+						<p>
+							<span th:if="${order.status == 1}">Order Status: <span class="text-danger">Pending Confirmation</span></span>
+							<span th:if="${order.status == 2}">Order Status: Processing</span>
+							<span th:if="${order.status == 3}">Order Status: Shipping</span>
+							<span th:if="${order.status == 4}">Order Status: <span class="text-success">Delivered</span></span>
+							<span th:if="${order.status == 5}">Order Status: Completed</span>
+							<span th:if="${order.status == 6}">Order Status: <span class="text-danger">Cancelled</span><br/>
+                                Cancel Reason: <span th:text="${order.cancelReason}"></span>
+                            </span>
+						</p>
+
+						<!-- Action Buttons -->
+						<div class="form-button-action">
+							<!-- Confirm Button -->
+							<a th:if="${order.status == 1}" th:href="@{|/admin/orders/updateStatus/${order.id}/2|}"
+							   class="btn btn-primary btn-sm">Confirm</a>
+
+							<!-- Cancel Button / Modal -->
+							<button type="button" class="btn btn-danger btn-sm" th:if="${order.status == 1}"
+									data-bs-toggle="modal" th:attr="data-bs-target='#cancelModal' + ${order.id}">
+								Cancel Order
+							</button>
+
+							<div class="modal fade" th:id="'cancelModal' + ${order.id}" tabindex="-1" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<form th:action="@{|/admin/orders/cancel/${order.id}|}" method="post">
+											<div class="modal-header">
+												<h5 class="modal-title">Reason for Cancelling Order</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+                                                <textarea name="cancelReason" class="form-control"
+														  placeholder="Enter reason for cancellation" required></textarea>
+											</div>
+											<div class="modal-footer">
+												<button type="submit" class="btn btn-danger">Cancel Order</button>
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+
+							<!-- Shipping / Delivered Buttons -->
+							<a th:if="${order.status == 2}" th:href="@{|/admin/orders/updateStatus/${order.id}/3|}"
+							   class="btn btn-success btn-sm">Shipping</a>
+							<a th:if="${order.status == 3}" th:href="@{|/admin/orders/updateStatus/${order.id}/4|}"
+							   class="btn btn-outline-success btn-sm">Delivered</a>
+						</div>
+					</div>
+
+					<!-- Order Products -->
+					<h4>Order Products</h4>
+					<div class="table-responsive">
+						<table class="table table-striped table-hover">
+							<thead>
+							<tr>
+								<th>#</th>
+								<th>Product Image</th>
+								<th>Product Name</th>
+								<th>Size</th>
+								<th>Price</th>
+								<th>Quantity</th>
+								<th>Total Price</th>
+							</tr>
+							</thead>
+							<tbody>
+							<th:block th:each="orderDetail, st:${order.orderDetails}">
+								<tr th:object="${orderDetail}">
+									<td th:text="${st.count}"></td>
+									<td>
+										<img th:src="@{|/images/${orderDetail.product.image}|}" width="100" height="100" alt="IMG">
+									</td>
+									<td th:text="${orderDetail.product.name}"></td>
+									<td th:text="${orderDetail.size}"></td>
+									<td th:text="${#numbers.formatDecimal(orderDetail.price,1,'COMMA',0,'POINT') + 'đ'}"></td>
+									<td th:text="${#numbers.formatDecimal(orderDetail.quantity,1,'COMMA',0,'POINT')}"></td>
+									<td th:text="${#numbers.formatDecimal(orderDetail.price * orderDetail.quantity,1,'COMMA',0,'POINT') + 'đ'}"></td>
+								</tr>
+							</th:block>
+							</tbody>
+						</table>
+					</div>
+
+				</div>
 			</div>
 		</div>
-		<div class="row">
-	        <div class="col-md-12">
-	          <div class="card">
-	            <div class="card-header">
-	              <h4 class="card-title">Chi tiết đơn hàng</h4>
-	            </div>
-	            <div class="card-body" th:object="${order}">
-	              	<div>
-                  		<div class="form-group">
-                          	<label th:text="${'Mã đơn hàng: #' + order.id}">Tên</label>
-                        </div>
-                        <div class="form-group">
-                          	<label th:text="${'Ngày đặt hàng: ' + #dates.format(order.createdAt,'dd-MM-yyyy')}">Slug</label>
-                        </div>
-                        
-                        <div class="form-group">
-                          	<label th:text="${'Tổng tiền: ' + #numbers.formatDecimal(order.total, 1,'COMMA', 0, 'POINT') + 'đ'}">Mô tả</label>
-                        </div>
-                        
-                        <div class="form-group">
-                          	<label th:text="${'Phí vận chuyển: ' + #numbers.formatDecimal(order.feeShip, 1,'COMMA', 0, 'POINT') + 'đ'}">Số lượng</label>
-                        </div>
-                        <div class="form-group">
-                          	<label th:text="${'Giảm giá: ' + #numbers.formatDecimal(order.discount, 1,'COMMA', 0, 'POINT') + 'đ'}">Giá</label>
-                        </div>
-                        <div class="form-group">
-                          	<span th:if="${order.status == 1}">
-								Trạng thái đơn hàng: <span class="text-danger">Chờ xác nhận</span>
-							</span>
-							<span th:if="${order.status == 2}">
-								Trạng thái đơn hàng: Đang xử lý
-							</span>
-							<span th:if="${order.status == 3}">
-								Trạng thái đơn hàng: Đang vận chuyển
-							</span>
-							<span th:if="${order.status == 4}">
-								Trạng thái đơn hàng: <span class="text-danger">Đã giao</span>
-							</span>
-							<span th:if="${order.status == 5}">
-								Trạng thái đơn hàng: Hoàn thành
-							</span>
-							<span th:if="${order.status == 6}">
-								Trạng thái đơn hàng: <span class="text-danger">Hủy</span>
-							</span>
-                        </div>
-                  	</div>
-                  	
-                  	<h4>Chi tiết đơn hàng</h4>
-                  	<div class="table-responsive">
-	                <table
-	                  id="basic-datatables"
-	                  class="display table table-striped table-hover"
-	                >
-	                  <thead>
-	                    <tr>
-	                      	<th>#</th>
-	                      	<th>Sản phẩm</th>
-	                       	<th></th>
-	                       	<th>Giá</th>
-	                       	<th>Số lượng</th>
-	                       	<th>Thành tiền</th>
-	                    </tr>
-	                  </thead>
-	                  <tbody >
-	                  	<th:block th:each="orderDetail, st:${order.orderDetails}">
-	                  		<tr th:object="${orderDetail}">
-		                        <td th:text="${st.count}"></td>
-		                        <td>
-		                        	<img th:src="@{|/images/${orderDetail.product.image}|}" alt="IMG" width="100" height="100">
-		                        </td>
-		                        <td th:text="${orderDetail.product.name}"></td>
-		                        <td th:text="${#numbers.formatDecimal(orderDetail.price, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
-		                        <td th:text="${#numbers.formatDecimal(orderDetail.quantity, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
-		                        <td th:text="${#numbers.formatDecimal(orderDetail.price * orderDetail.quantity, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
-		                        
-	                      </tr>
-	                  	</th:block>
-	                  </tbody>
-	                </table>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-		</div>
-	</article>
+	</div>
+</article>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import com.example.demo.entity.Order;
 import com.example.demo.entity.Product;
 import com.example.demo.repository.OrderDetailRepository;
 import com.example.demo.repository.OrderRepository;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -56,20 +58,22 @@ public class OrderController {
         model.addAttribute("order", order);
         return "order-detail";
     }
-    @RequestMapping("/orders/cancel/{id}")
-    public String orderCancel(Model model, @PathVariable("id")Integer id){
+    @PostMapping("/orders/cancel/{id}")
+    public String orderCancel(@PathVariable("id") Integer id,
+                              @RequestParam("cancelReason") String cancelReason) {
         Account account = (Account) session.getAttribute("account");
-        if (account == null) {
-            return "redirect:/login";
-        }
+        if (account == null) return "redirect:/login";
+
         Order order = orderRepository.findById(id).orElse(null);
-        if (order == null || order.getAccount().getId() != account.getId()){
-            return "redirect:/404";
-        }
-        order.setStatus(6);
+        if (order == null || !order.getAccount().getId().equals(account.getId())) return "redirect:/404";
+
+        order.setStatus(6); // Cancel
+        order.setCancelReason(cancelReason); // lưu lý do
         orderRepository.save(order);
+
         return "redirect:/orders";
     }
+
     @RequestMapping("/orders/receive/{id}")
     public String orderUpdate(Model model, @PathVariable("id")Integer id){
         Account account = (Account) session.getAttribute("account");

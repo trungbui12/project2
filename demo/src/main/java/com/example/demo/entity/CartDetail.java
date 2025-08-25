@@ -15,6 +15,8 @@ public class CartDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     int quantity;
+    @Column(length = 50)
+    String size;
     @ManyToOne @JoinColumn(name = "account_id")
     Account account;
     @ManyToOne @JoinColumn(name = "product_id")
@@ -50,5 +52,13 @@ public class CartDetail {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 }

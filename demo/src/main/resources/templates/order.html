@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Giỏ hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 <body>
 <main>
@@ -73,11 +75,38 @@
 										</span>
                 </td>
 
-                <td class="ctext-center">
-                  <a class="btn btn-danger" th:if="${order.status < 2}" th:href="@{|/orders/cancel/${order.id}|}">Cancel order</a>
-                  <a class="btn btn-success" th:if="${order.status == 4}" th:href="@{|/orders/receive/${order.id}|}">Receipt of delivery</a>
-                  <a class="btn btn-infor" th:href="@{|/orders/detail/${order.id}|}">Detail</a>
-                </td>
+                  <td class="ctext-center">
+                      <!-- Cancel Button -->
+                      <button class="btn btn-danger" th:if="${order.status < 2}" data-bs-toggle="modal" th:attr="data-bs-target='#cancelModal' + ${order.id}">
+                          Cancel order
+                      </button>
+
+                      <!-- Modal -->
+                      <div class="modal fade" th:id="'cancelModal' + ${order.id}" tabindex="-1" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <form th:action="@{|/orders/cancel/${order.id}|}" method="post">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title">Reason for canceling order</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <textarea name="cancelReason" class="form-control" placeholder="Enter reason" required></textarea>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="submit" class="btn btn-danger">Cancel Order</button>
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Receipt Button -->
+                      <a class="btn btn-success" th:if="${order.status == 4}" th:href="@{|/orders/receive/${order.id}|}">Receipt of delivery</a>
+                      <a class="btn btn-infor" th:href="@{|/orders/detail/${order.id}|}">Detail</a>
+                  </td>
+
               </tr>
             </th:block>
 
@@ -86,6 +115,7 @@
       </div>
     </div>
   </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </main>
 </body>
 </html>

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 document.querySelectorAll('.cart-item').forEach(item => {
 	const minusBtn = item.querySelector('.btn-num-product-down');
@@ -17,7 +17,7 @@ document.querySelectorAll('.cart-item').forEach(item => {
 			quantityInput.value = qty - 1;
 			window.location = window.location.href + "/update?id="+id + "&quantity="+(qty-1);
 		}
-	    
+
   	});
 	plusBtn.addEventListener('click', () => {
 		let qty = parseInt(quantityInput.value);
@@ -96,15 +96,15 @@ $("#btn-payment").on("click",function(){
 	const discountAmount = parseInt(document.getElementById('discountAmount').textContent.replace(/[.,]/g, ''));
 	const paymentAmount = parseInt(document.getElementById('paymentAmount').textContent.replace(/[.,]/g, ''));
 	const shippingFee = parseInt(document.getElementById('shippingFee').textContent.replace(/[.,]/g, ''));
-	const address = $('#address').val();	
-	
+	const address = $('#address').val();
+
 	if(productsTotal == 0 || shippingFee == 0 || address == ""){
 		swal("Thanh toán", "Chưa nhập đủ thông tin!", "error");
 		return
 	}else{
 		$("#formpayment").submit();
 	}
-	
+
 });
 $("#paymentMethod").on("change", function() {
   const method = $(this).val();
@@ -128,9 +128,9 @@ $("#paymentMethod").on("change", function() {
 });
 
 async function checkout(shippingFee, discountPercent, total) {
-	
+
 	const orderData = {
-	    
+
 		shippingFee,
 	    discountPercent,
 	    total
@@ -141,10 +141,10 @@ async function checkout(shippingFee, discountPercent, total) {
 	      headers: { 'Content-Type': 'application/json' },
 	      body: JSON.stringify(orderData)
 	    });
-	    
+
 	    if (response.ok) {
-			
-			const data = await response.json(); 
+
+			const data = await response.json();
 			console.log(data);
 	      swal("Thanh toán",'Đặt hàng thành công!', "success")
 		  .then(() => {

@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CartDetailRepository extends JpaRepository<CartDetail, Integer> {
-    public CartDetail findByAccountAndProduct(Account account, Product product);
+    public CartDetail findByAccountAndProductAndSize(Account account, Product product, String size);
     List<CartDetail> findByAccount(Account account);
 }

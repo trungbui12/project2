@@ -1,89 +1,113 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"   th:replace="~{/admin/layout::view(~{::title}, ~{::article})}" th:with="active=${active}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/admin/layout::view(~{::title}, ~{::article})}" th:with="active=${active}">
 <head>
-<meta charset="UTF-8">
-<title>Quản lý sản phẩm</title>
+	<meta charset="UTF-8">
+	<title>Product Management</title>
 </head>
 <body>
-	<article>
-		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-			<div>
-				<h3 class="fw-bold mb-3">Thêm mới sản phẩm</h3>
-				<h6 class="op-7 mb-2"></h6>
-			</div>
-			<div class="ms-md-auto py-2 py-md-0">
-				<a th:href="@{/admin/products}" class="btn btn-primary btn-round">Quay lại</a>
+<article>
+	<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+		<div>
+			<h3 class="fw-bold mb-3">Add New Product</h3>
+			<h6 class="op-7 mb-2"></h6>
+		</div>
+		<div class="ms-md-auto py-2 py-md-0">
+			<a th:href="@{/admin/products}" class="btn btn-primary btn-round">Back</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Add New Product</h4>
+				</div>
+				<div class="card-body">
+					<label class="text-danger" th:text="${message}"></label>
+					<form th:action="@{/admin/products/add}" method="post" th:object="${product}" enctype="multipart/form-data">
+						<div class="form-group">
+							<label for="name">Name</label>
+							<input type="text" class="form-control" id="name" th:field="*{name}" required/>
+							<i class="text-danger" th:errors="*{name}"></i>
+						</div>
+						<div class="form-group">
+							<label for="slug">Slug</label>
+							<input type="text" class="form-control" id="slug" th:field="*{slug}" required/>
+							<i class="text-danger" th:errors="*{slug}"></i>
+							<label class="text-danger" th:text="${slugError}"></label>
+						</div>
+
+						<div class="form-group">
+							<label for="description">Description</label>
+							<textarea class="form-control" id="description" th:field="*{description}"></textarea>
+						</div>
+
+						<div class="form-group">
+							<label for="quantity">Quantity</label>
+							<input type="number" class="form-control" id="quantity" th:field="*{quantity}" required/>
+							<i class="text-danger" th:errors="*{quantity}"></i>
+						</div>
+
+						<div class="form-group">
+							<label for="sizes">Sizes (comma separated)</label>
+							<input type="text" class="form-control" id="sizes" th:field="*{sizes}" placeholder="Example: S,M,L,XL"/>
+						</div>
+
+						<div class="form-group">
+							<label for="price">Price</label>
+							<input type="number" class="form-control" id="price" th:field="*{price}" required/>
+							<label for="price" id="lblPrice"></label>
+							<i class="text-danger" th:errors="*{price}"></i>
+						</div>
+
+						<div class="form-group">
+							<label for="category">Category</label>
+							<select class="form-select" id="category" th:field="*{category.id}">
+								<option value="0">-- Select Category --</option>
+								<option th:each="cate:${categories}" th:value="${cate.id}" th:text="${cate.name}"></option>
+							</select>
+							<i class="text-danger" th:text="${errorCategory}"></i>
+						</div>
+
+						<div class="form-group">
+							<label for="image">Image</label>
+							<input type="file" class="form-control-file" id="image" name="imageProduct"/>
+						</div>
+						<div class="form-group">
+							<label for="image2">Additional Image 1</label>
+							<input type="file" class="form-control-file" id="image2" name="imageProduct2"/>
+						</div>
+						<div class="form-group">
+							<label for="image3">Additional Image 2</label>
+							<input type="file" class="form-control-file" id="image3" name="imageProduct3"/>
+						</div>
+						<div class="form-group">
+							<label for="imageSizeGuide">Size Guide Image</label>
+							<input type="file" class="form-control-file" id="imageSizeGuide" name="imageSizeGuide"/>
+							<div th:if="${product.sizeGuide != null}">
+								<img th:src="@{|/images/${product.sizeGuide}|}" alt="Size Guide" class="img-fluid mt-2" style="max-width:200px;">
+							</div>
+						</div>
+						<div class="card-action">
+							<button class="btn btn-success">Save</button>
+							<a th:href="@{/admin/products}" class="btn btn-danger">Cancel</a>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
-		<div class="row">
-	        <div class="col-md-12">
-	          <div class="card">
-	            <div class="card-header">
-	              <h4 class="card-title">Thêm mới sản phẩm</h4>
-	            </div>
-	            <div class="card-body">
-	              	<label class="text-danger" th:text="${message}"></label>
-                  	<form th:action="@{/admin/products/add}" method="post" th:object="${product}" enctype="multipart/form-data">
-                  		<div class="form-group">
-                          	<label for="name">Tên</label>
-                          	<input type="text" class="form-control" id="name" th:field="*{name}" required/>
-                        	<i class="text-danger" th:errors="*{name}"></i>
-                        </div>
-                        <div class="form-group">
-                          	<label for="slug">Slug</label>
-                          	<input type="text" class="form-control" id="slug" th:field="*{slug}"  required/>
-                        	<i class="text-danger" th:errors="*{slug}"></i>
-                        	<label class="text-danger" th:text="${slugError}"></label>
-                        </div>
-                        
-                        <div class="form-group">
-                          	<label for="description">Mô tả</label>
-                          	<textarea class="form-control" id="description" th:field="*{description}"></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                          	<label for="quantity">Số lượng</label>
-                          	<input type="number" class="form-control" id="quantity" th:field="*{quantity}" required/>
-                        	<i class="text-danger" th:errors="*{quantity}"></i>
-                        </div>
-                        <div class="form-group">
-                          	<label for="price">Giá</label>
-                          	<input type="number" class="form-control" id="price" th:field="*{price}" required/>
-                        	<label for="price" id="lblPrice"></label>
-                        	<i class="text-danger" th:errors="*{price}"></i>
-                        </div>
-                        <div class="form-group">
-                          	<label for="category">Loại sản phẩm</label>
-                          	<select class="form-select" id="category" th:field="*{category.id}">
-                          		<option value="0">-- Chọn loại sản phẩm --</option>
-                          		<option th:each="cate:${categories}" th:value="${cate.id}" th:text="${cate.name}"></option>
-                          	</select>
-                        	<i class="text-danger" th:text="${errorCategory}"></i>
-                        </div>
-                        <div class="form-group">
-                          	<label for="image">Ảnh</label>
-                          	<input type="file" class="form-control-file" id="image" name="imageProduct"/>
-                        </div>
-                        <div class="card-action">
-		                    <button class="btn btn-success">Lưu</button>
-		                    <a th:href="@{/admin/products}" class="btn btn-danger">Hủy</a>
-		                 </div>
-                  	</form>  
-	            </div>
-	          </div>
-	        </div>
-	        <script type="text/javascript">
-	        	$('#name').on('change', function(){
-	        		var str = removeUTF8($('#name').val());
-	        		$('#slug').val(str);
-	        	});
-	        	
-	        	$('#price').on('input', function(){
-					const formatted = formatNumber($(this).val());
-				    $(lblPrice).html(formatted);
-				});
-	        </script>
-		</div>
-	</article>
+
+		<script type="text/javascript">
+			$('#name').on('change', function(){
+                var str = removeUTF8($('#name').val());
+                $('#slug').val(str);
+            });
+
+            $('#price').on('input', function(){
+                const formatted = formatNumber($(this).val());
+                $(lblPrice).html(formatted);
+            });
+		</script>
+	</div>
+</article>
 </body>
 </html>

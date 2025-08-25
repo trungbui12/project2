@@ -1,4 +1,4 @@
-<div class="sidebar" data-background-color="dark">
+<div class="sidebar" data-background-color="dark" xmlns:th="http://www.w3.org/1999/xhtml">
   <div class="sidebar-logo">
     <!-- Logo Header -->
     <div class="logo-header" data-background-color="dark">
@@ -34,45 +34,37 @@
                   aria-expanded="false"
           >
             <i class="fas fa-home"></i>
-            <p>Quản trị</p>
+            <p>Dashboard</p>
           </a>
-
         </li>
         <li class="nav-item" th:classappend="${active=='category'?'active':''}">
           <a th:href="@{/admin/categories}">
             <i class="fas fa-bars"></i>
-            <p>Quản lý loại sản phẩm</p>
-
+            <p>Category Management</p>
           </a>
         </li>
         <li class="nav-item" th:classappend="${active=='product'?'active':''}">
           <a th:href="@{/admin/products}">
             <i class="fas fa-bars"></i>
-            <p>Quản lý sản phẩm</p>
+            <p>Product Management</p>
           </a>
         </li>
         <li class="nav-item" th:classappend="${active=='order'?'active':''}">
           <a th:href="@{/admin/orders}">
             <i class="fas fa-bars"></i>
-            <p>Quản lý đơn hàng</p>
+            <p>Order Management</p>
           </a>
         </li>
         <li class="nav-item" th:classappend="${active=='voucher'?'active':''}">
           <a th:href="@{/admin/vouchers}">
             <i class="fas fa-bars"></i>
-            <p>Quản lý khuyến mãi</p>
+            <p>Voucher Management</p>
           </a>
         </li>
-        <li class="nav-item" th:classappend="${active=='account'?'active':''}">
-          <a th:href="@{/admin/accounts}">
+        <li class="nav-item" th:classappend="${active=='contact'?'active':''}">
+          <a th:href="@{/admin/contacts}">
             <i class="fas fa-bars"></i>
-            <p>Quản lý người dùng</p>
-          </a>
-        </li>
-        <li class="nav-item" th:classappend="${active=='thongke'?'active':''}">
-          <a th:href="@{/admin/thong-ke}">
-            <i class="fas fa-bars"></i>
-            <p>Báo cáo thống kê</p>
+            <p>Message Management</p>
           </a>
         </li>
       </ul>

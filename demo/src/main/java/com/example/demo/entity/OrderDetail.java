@@ -16,6 +16,8 @@ public class OrderDetail {
     Integer id;
     int quantity;
     int price;
+    @Column(name = "size", length = 50) // thêm cột size
+    String size;
     @ManyToOne
     @JoinColumn(name = "order_id")
     Order order;
@@ -60,6 +62,14 @@ public class OrderDetail {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 }
 

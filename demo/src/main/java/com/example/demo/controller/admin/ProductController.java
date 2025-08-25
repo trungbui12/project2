@@ -21,117 +21,174 @@ import java.nio.file.Path;
 import java.util.List;
 
 @Controller
+@RequestMapping("/admin/products")
 public class ProductController {
-    @Autowired
-    ProductRepository productRepository;
-    @Autowired
-    CategoryRepository categoryRepository;
-    @Autowired
-    ServletContext servletContext;
 
-    @RequestMapping("/admin/products")
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ServletContext servletContext;
+
+    // Trang danh sách sản phẩm
+    @GetMapping
     public String index(Model model) {
         List<Product> products = productRepository.findByActive(true);
         model.addAttribute("products", products);
         model.addAttribute("active", "product");
         return "admin/products/list";
     }
-    //    from them moi
-    @RequestMapping("/admin/products/add")
+
+    // Form thêm mới
+    @GetMapping("/add")
     public String showAddProductForm(Model model) {
-        // Đánh dấu tab đang hoạt động là "product"
         model.addAttribute("active", "product");
-
-        // Tạo một đối tượng Product mới để binding với form
         model.addAttribute("product", new Product());
-
-        // Lấy danh sách các danh mục đang hoạt động, sắp xếp theo ID giảm dần
-        List<Category> activeCategories = categoryRepository.findByActive(true, Sort.by(Sort.Direction.DESC, "id"));
-        model.addAttribute("categories", activeCategories);
-
-        // Trả về tên view để hiển thị form thêm sản phẩm
+        List<Category> categories = categoryRepository.findByActive(true, Sort.by(Sort.Direction.DESC, "id"));
+        model.addAttribute("categories", categories);
         return "admin/products/add";
     }
-    @PostMapping("/admin/products/add")
-    public String insert(Model model, @Valid @ModelAttribute Product product, Errors errors, @RequestParam("imageProduct") MultipartFile image) {
+
+    // Xử lý thêm mới
+    @PostMapping("/add")
+    public String insert(Model model,
+                         @Valid @ModelAttribute Product product,
+                         Errors errors,
+                         @RequestParam("imageProduct") MultipartFile image,
+                         @RequestParam("imageProduct2") MultipartFile image2,
+                         @RequestParam("imageProduct3") MultipartFile image3,
+                         @RequestParam("imageSizeGuide") MultipartFile imageSizeGuide) {
+
         model.addAttribute("active", "product");
-        if(errors.hasErrors()){
-            model.addAttribute("message", "Vui long nhap day du thong tin");
+
+        if (errors.hasErrors()) {
+            model.addAttribute("message", "Please fill in all required fields");
+            return "admin/products/add";
         }
-        try{
-            if (!image.isEmpty()) {
-                String fileName = image.getOriginalFilename();
-                String filePath = servletContext.getRealPath("/images/" + fileName);
-                if (!Files.exists(Path.of(filePath))) {
-                    Files.createDirectories(Path.of(filePath));
-                }
-                File file = new File(filePath);
-                image.transferTo(file);
-                product.setImage(fileName);
-            }
+
+        try {
+            saveImages(product, image, image2, image3, imageSizeGuide);
             Category category = categoryRepository.findById(product.getCategory().getId()).orElse(null);
             product.setCategory(category);
             product.setActive(true);
             productRepository.save(product);
+
             return "redirect:/admin/products";
         } catch (IOException e) {
             e.printStackTrace();
+            model.addAttribute("message", "Error uploading images");
+            return "admin/products/add";
         }
-        return "admin/products/add";
     }
-    //    from edit
-    @RequestMapping("/admin/products/edit/{id}")
+
+    // Form edit
+    @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable("id") Integer id) {
-        // Đánh dấu tab đang hoạt động là "product"
         model.addAttribute("active", "product");
         Product product = productRepository.findById(id).orElse(null);
+        model.addAttribute("product", product);
 
-        // Tạo một đối tượng Product mới để binding với form
-        model.addAttribute("product",product);
-
-        // Lấy danh sách các danh mục đang hoạt động, sắp xếp theo ID giảm dần
         List<Category> categories = categoryRepository.findByActive(true, Sort.by(Sort.Direction.DESC, "id"));
         model.addAttribute("categories", categories);
 
-        // Trả về tên view để hiển thị form thêm sản phẩm
         return "admin/products/edit";
     }
-//    form cap nhat
-    @PostMapping("/admin/products/update")
-    public String update(Model model, @Valid @ModelAttribute Product product, Errors errors, @RequestParam("imageProduct") MultipartFile image) {
+
+    // Xử lý cập nhật
+    @PostMapping("/update")
+    public String update(Model model,
+                         @Valid @ModelAttribute Product product,
+                         Errors errors,
+                         @RequestParam("imageProduct") MultipartFile image,
+                         @RequestParam("imageProduct2") MultipartFile image2,
+                         @RequestParam("imageProduct3") MultipartFile image3,
+                         @RequestParam("imageSizeGuide") MultipartFile imageSizeGuide) {
+
         model.addAttribute("active", "product");
-        if(errors.hasErrors()){
-            model.addAttribute("message", "Vui long nhap day du thong tin");
+
+        if (errors.hasErrors()) {
+            model.addAttribute("message", "Please fill in all required fields");
+            return "admin/products/edit";
         }
-        try{
-            if (!image.isEmpty()) {
-                String fileName = image.getOriginalFilename();
-                String filePath = servletContext.getRealPath("/images/" + fileName);
-                if (!Files.exists(Path.of(filePath))) {
-                    Files.createDirectories(Path.of(filePath));
-                }
-                File file = new File(filePath);
-                image.transferTo(file);
-                product.setImage(fileName);
-            }
+
+        try {
+            saveImages(product, image, image2, image3, imageSizeGuide);
             Category category = categoryRepository.findById(product.getCategory().getId()).orElse(null);
             product.setCategory(category);
             product.setActive(true);
             productRepository.save(product);
+
             return "redirect:/admin/products";
         } catch (IOException e) {
             e.printStackTrace();
+            model.addAttribute("message", "Error uploading images");
+            return "admin/products/edit";
         }
-        return "admin/products/add";
     }
-//    form delete
-    @RequestMapping("/admin/products/delete/{id}")
-    public String delete(Model model, @PathVariable("id") Integer id){
-        model.addAttribute("active","product");
+
+    // Xóa mềm
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Integer id) {
         Product product = productRepository.findById(id).orElse(null);
-        product.setActive(false);
-        productRepository.save(product);
+        if (product != null) {
+            product.setActive(false);
+            productRepository.save(product);
+        }
         return "redirect:/admin/products";
     }
 
+    // Hàm tiện ích để lưu ảnh
+    private void saveImages(Product product,
+                            MultipartFile image,
+                            MultipartFile image2,
+                            MultipartFile image3,
+                            MultipartFile imageSizeGuide) throws IOException {
+
+        // Ảnh chính
+        if (!image.isEmpty()) {
+            String fileName = image.getOriginalFilename();
+            String filePath = servletContext.getRealPath("/images/" + fileName);
+            createFileIfNotExist(filePath);
+            image.transferTo(new File(filePath));
+            product.setImage(fileName);
+        }
+
+        // Ảnh phụ 1
+        if (!image2.isEmpty()) {
+            String fileName2 = image2.getOriginalFilename();
+            String filePath2 = servletContext.getRealPath("/images/" + fileName2);
+            createFileIfNotExist(filePath2);
+            image2.transferTo(new File(filePath2));
+            product.setImage2(fileName2);
+        }
+
+        // Ảnh phụ 2
+        if (!image3.isEmpty()) {
+            String fileName3 = image3.getOriginalFilename();
+            String filePath3 = servletContext.getRealPath("/images/" + fileName3);
+            createFileIfNotExist(filePath3);
+            image3.transferTo(new File(filePath3));
+            product.setImage3(fileName3);
+        }
+
+        // Ảnh Size Guide
+        if (!imageSizeGuide.isEmpty()) {
+            String fileNameSG = imageSizeGuide.getOriginalFilename();
+            String filePathSG = servletContext.getRealPath("/images/" + fileNameSG);
+            createFileIfNotExist(filePathSG);
+            imageSizeGuide.transferTo(new File(filePathSG));
+            product.setSizeGuide(fileNameSG);
+        }
+    }
+
+    // Tạo thư mục nếu chưa tồn tại
+    private void createFileIfNotExist(String filePath) throws IOException {
+        Path path = Path.of(filePath).getParent();
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
+    }
 }

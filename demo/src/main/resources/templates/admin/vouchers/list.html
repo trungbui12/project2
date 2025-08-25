@@ -1,76 +1,74 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"   th:replace="~{/admin/layout::view(~{::title}, ~{::article})}" th:with="active=${active}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/admin/layout::view(~{::title}, ~{::article})}" th:with="active=${active}">
 <head>
-<meta charset="UTF-8">
-<title>Quản lý Khuyến mãi</title>
+	<meta charset="UTF-8">
+	<title>Voucher Management</title>
 </head>
 <body>
-	<article>
-		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-			<div>
-				<h3 class="fw-bold mb-3">Quản lý khuyến mãi</h3>
-				<h6 class="op-7 mb-2"></h6>
-			</div>
-			<div class="ms-md-auto py-2 py-md-0">
-				<a th:href="@{/admin/vouchers/add}" class="btn btn-primary btn-round">Thêm mới</a>
+<article>
+	<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+		<div>
+			<h3 class="fw-bold mb-3">Voucher Management</h3>
+			<h6 class="op-7 mb-2"></h6>
+		</div>
+		<div class="ms-md-auto py-2 py-md-0">
+			<a th:href="@{/admin/vouchers/add}" class="btn btn-primary btn-round">Add New</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Voucher List</h4>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table id="basic-datatables" class="display table table-striped table-hover">
+							<thead>
+							<tr>
+								<th>Id</th>
+								<th>Code</th>
+								<th>Discount (%)</th>
+								<th>Quantity</th>
+								<th>Start Date</th>
+								<th>End Date</th>
+								<th width="15%">Action</th>
+							</tr>
+							</thead>
+							<tbody>
+							<th:block th:each="voucher:${vouchers}">
+								<tr th:object="${voucher}">
+									<td th:text="*{id}"></td>
+									<td th:text="*{code}"></td>
+									<td th:text="*{discountPercent}"></td>
+									<td th:text="*{quantity}"></td>
+									<td th:text="${#dates.format(voucher.startedAt, 'dd/MM/yyyy')}"></td>
+									<td th:text="${#dates.format(voucher.endAt, 'dd/MM/yyyy')}"></td>
+									<td>
+										<div class="form-button-action">
+											<a th:if="*{!actived}" th:href="@{|/admin/vouchers/active/*{id}|}" data-bs-toggle="tooltip" title="Activate" class="btn btn-link btn-black btn-lg" data-original-title="Activate">
+												<i class="fa fa-check-square"></i>
+											</a>
+											<a th:if="*{actived}" th:href="@{|/admin/vouchers/active/*{id}|}" data-bs-toggle="tooltip" title="Deactivate" class="btn btn-link btn-success btn-lg" data-original-title="Deactivate">
+												<i class="fa fa-check-square"></i>
+											</a>
+											<a th:href="@{|/admin/vouchers/edit/*{id}|}" data-bs-toggle="tooltip" title="Edit" class="btn btn-link btn-primary btn-lg" data-original-title="Edit">
+												<i class="fa fa-edit"></i>
+											</a>
+											<a th:href="@{|/admin/vouchers/delete/*{id}|}" data-bs-toggle="tooltip" title="Delete" class="btn btn-link btn-danger" data-original-title="Remove">
+												<i class="fa fa-times"></i>
+											</a>
+										</div>
+									</td>
+								</tr>
+							</th:block>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="row">
-	        <div class="col-md-12">
-	          <div class="card">
-	            <div class="card-header">
-	              <h4 class="card-title">Danh sách khuyến mãi</h4>
-	            </div>
-	            <div class="card-body">
-	              <div class="table-responsive">
-	                <table
-	                  id="basic-datatables"
-	                  class="display table table-striped table-hover"
-	                >
-	                  <thead>
-	                    <tr>
-	                      	<th>Id</th>
-	                      	<th>Code</th>
-	                       	<th>% giảm giá</th>
-	                       	<th>Số lượng</th>
-	                       	<th>Ngày bắt đầu</th>
-	                       	<th>Ngày kết thúc</th>
-	                     	<th width="15%">Action</th>
-	                    </tr>
-	                  </thead>
-	                  <tbody >
-	                  	<th:block th:each="voucher:${vouchers}">
-	                  		<tr th:object="${voucher}">
-		                        <td th:text="*{id}"></td>
-		                        <td th:text="*{code}"></td>
-		                        <td th:text="*{discountPercent}"></td>
-		                        <td th:text="*{quantity}"></td>
-		                        <td th:text="${#dates.format(voucher.startedAt, 'dd/MM/yyyy')}"></td>
-		                        <td th:text="${#dates.format(voucher.endAt, 'dd/MM/yyyy')}"></td>
-		                        <td>
-		                        	<div class="form-button-action">
-		                        		<a th:if="*{!actived}" th:href="@{|/admin/vouchers/active/*{id}|}" data-bs-toggle="tooltip" title="Hoạt động" class="btn btn-link btn-black btn-lg" data-original-title="Edit Task">
-			                               <i class="fa fa-check-square"></i>
-			                             </a>
-		                        		<a th:if="*{actived}" th:href="@{|/admin/vouchers/active/*{id}|}" data-bs-toggle="tooltip" title="Ngưng hoạt động" class="btn btn-link btn-success btn-lg" data-original-title="Edit Task">
-			                               <i class="fa fa-check-square"></i>
-			                             </a>
-			                             <a th:href="@{|/admin/vouchers/edit/*{id}|}" data-bs-toggle="tooltip" title="Chỉnh sửa" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
-			                               <i class="fa fa-edit"></i>
-			                             </a>
-			                             <a th:href="@{|/admin/vouchers/delete/*{id}|}" data-bs-toggle="tooltip" title="Xóa" class="btn btn-link btn-danger" data-original-title="Remove">
-			                               <i class="fa fa-times"></i>
-			                             </a>
-		                            </div>
-		                        </td>
-	                      </tr>
-	                  	</th:block>
-	                  </tbody>
-	                </table>
-	              </div>
-	            </div>
-	          </div>
-	        </div>
-	</article>
+	</div>
+</article>
 </body>
 </html>

@@ -1,54 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"   th:replace="~{/admin/layout::view(~{::title}, ~{::article})}" th:with="active=${active}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{/admin/layout::view(~{::title}, ~{::article})}" th:with="active=${active}">
 <head>
-<meta charset="UTF-8">
-<title>Quản lý loại sản phẩm</title>
+	<meta charset="UTF-8">
+	<title>Product Category Management</title>
 </head>
 <body>
-	<article>
-		<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-			<div>
-				<h3 class="fw-bold mb-3">Quản lý Loại sản phẩm</h3>
-				<h6 class="op-7 mb-2"></h6>
-			</div>
-			<div class="ms-md-auto py-2 py-md-0">
-				<a th:href="@{/admin/categories}" class="btn btn-primary btn-round">Quay lại</a>
+<article>
+	<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+		<div>
+			<h3 class="fw-bold mb-3">Manage Product Categories</h3>
+			<h6 class="op-7 mb-2"></h6>
+		</div>
+		<div class="ms-md-auto py-2 py-md-0">
+			<a th:href="@{/admin/categories}" class="btn btn-primary btn-round">Back</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Add New Product Category</h4>
+				</div>
+				<div class="card-body">
+					<label class="text-danger" th:text="${message}"></label>
+					<form th:action="@{/admin/categories/add}" method="post" th:object="${category}">
+						<div class="form-group">
+							<label for="name">Name</label>
+							<input type="text" class="form-control" id="name" name="name" placeholder="Category Name" required/>
+							<i class="text-danger" th:errors="*{name}"></i>
+						</div>
+						<div class="form-group">
+							<label for="slug">Slug</label>
+							<input type="text" class="form-control" id="slug" name="slug" placeholder="category-name" required/>
+							<i class="text-danger" th:errors="*{slug}"></i>
+							<label class="text-danger" th:text="${slugError}"></label>
+						</div>
+						<div class="card-action">
+							<button class="btn btn-success">Save</button>
+							<a th:href="@{/admin/categories}" class="btn btn-danger">Cancel</a>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
-		<div class="row">
-	        <div class="col-md-12">
-	          <div class="card">
-	            <div class="card-header">
-	              <h4 class="card-title">Thêm mới loại sản phẩm</h4>
-	            </div>
-	            <div class="card-body">
-	              	<label class="text-danger" th:text="${message}"></label>
-                  	<form th:action="@{/admin/categories/add}" method="post" th:object="${category}">
-                  		<div class="form-group">
-                          	<label for="name">Tên</label>
-                          	<input type="text" class="form-control" id="name" name="name" placeholder="Tên loại" required/>
-                        	<i class="text-danger" th:errors="*{name}"></i>
-                        </div>
-                        <div class="form-group">
-                          	<label for="slug">Slug</label>
-                          	<input type="text" class="form-control" id="slug" name="slug" placeholder="ten-loai" required/>
-                        	<i class="text-danger" th:errors="*{slug}"></i>
-                        	<label class="text-danger" th:text="${slugError}"></label>
-                        </div>
-                        <div class="card-action">
-		                    <button class="btn btn-success">Lưu</button>
-		                    <a th:href="@{/admin/categories}" class="btn btn-danger">Hủy</a>
-		                 </div>
-                  	</form>  
-	            </div>
-	          </div>
-	        </div>
-	        <script type="text/javascript">
-	        	$('#name').on('change', function(){
-	        		var str = removeUTF8($('#name').val());
-	        		$('#slug').val(str);
-	        	});
-	        </script>	
-	</article>
+		<script type="text/javascript">
+			$('#name').on('change', function(){
+                var str = removeUTF8($('#name').val());
+                $('#slug').val(str);
+            });
+		</script>
+	</div>
+</article>
 </body>
 </html>

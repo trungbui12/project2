@@ -19,4 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     public Page<Product> findByKeyWord(@Param("keyword") String keyword, Pageable pageable);
     public Product findByActiveAndSlug(Boolean active, String slug);
     public List<Product> findByActiveAndCategory(Boolean active, Category category, Sort sort);
+    // 👉 Thêm đầy đủ return type
+    public  Product findBySlug(String slug);
 }

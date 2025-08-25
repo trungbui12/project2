@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Sản phẩm yêu thích</title>
+
 </head>
 <body>
 <main>
@@ -16,7 +17,7 @@
       </a>
 
       <span class="stext-109 cl4">
-				Shoping Cart
+				Checkout
 			</span>
     </div>
   </div>
@@ -34,6 +35,7 @@
                   <th class="column-1">Product</th>
                   <th class="column-2"></th>
                   <th class="column-3">Price</th>
+                  <th class="column-6">Size</th>
                   <th class="column-4">Quantity</th>
                   <th class="column-5">Total</th>
                   <th class="text-center" width="5%"> </th>
@@ -50,6 +52,7 @@
                     </td>
                     <td class="column-2" th:text="${cartDetail.product.name}"></td>
                     <td class="column-3 product-price" th:attr="data-price=${cartDetail.product.price}" th:text="${#numbers.formatDecimal(cartDetail.product.price, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
+                    <td class="column-6" th:text="${cartDetail.size}">M</td>
                     <td class="column-4">
                       <label th:if="${errorQuantity==cartDetail.id}" class="text-danger">So luong khong du</label>
                       <div class="wrap-num-product flex-w m-l-auto m-r-0">
@@ -98,9 +101,37 @@
             </div>
 
             <div class="size-209 p-r-18 p-r-0-sm w-full-ssm">
-              <p class="stext-111 cl6 p-t-2">
-                Delivery Address.
-              </p>
+              <!-- Customer Info -->
+              <div class="flex-w flex-tp-b-13">
+                <div class="size-208">
+                  <span class="stext-110 cl2" style="white-space: nowrap;">
+                    Customer Info:
+                  </span>
+                </div>
+              </div>
+
+              <div class="p-t-15">
+                <div class="bor8 bg0 m-b-12">
+                  <input class="stext-111 cl8 plh3 size-111 p-lr-15"
+                         type="text" id="customerName" name="customerName" placeholder="Full Name" required>
+                </div>
+
+                <div class="bor8 bg0 m-b-12">
+                  <input class="stext-111 cl8 plh3 size-111 p-lr-15"
+                         type="text" id="customerPhone" name="customerPhone" placeholder="Phone Number" required>
+                </div>
+
+                <div class="bor8 bg0 m-b-12">
+                  <input class="stext-111 cl8 plh3 size-111 p-lr-15"
+                         type="email" id="customerEmail" name="customerEmail" placeholder="Email" required>
+                </div>
+              </div>
+
+              <div class="size-208">
+                  <span class="stext-110 cl2" style="white-space: nowrap;">
+                    Delivery address:
+                  </span>
+              </div>
 
               <div class="p-t-15">
 
@@ -133,48 +164,34 @@
 
               </div>
             </div>
-              <div class="size-208 w-full-ssm" style="flex: 0 0 30%; max-width: 30%; display: flex; align-items: center;">
-                                      <span class="stext-110 cl2">
-                                          Voucher:
-                                      </span>
-              </div>
-            <div class="size-209 p-r-18 p-r-0-sm w-full-ssm" style="flex: 0 0 70%; max-width: 70%;">
-
-              <div class="p-t-15">
-
-                <div class="rs1-select2 rs2-select2 bor8 bg0 m-b-12 m-t-9">
-                  <select class="js-select2" name="voucher" id="voucher">
-                    <option value="">-- Chọn Voucher --</option>
-                    <option th:each="voucher : ${vouchers}"
-                            th:value="${voucher.id}"
-                            th:data-percent="${voucher.discountPercent}"
-                            th:text="${voucher.code + ' - ' + voucher.discountPercent + '%'}">
-                    </option>
-                  </select>
-                  <div class="dropDownSelect2"></div>
-                </div>
-
+            <!-- Voucher -->
+            <div class="p-t-15 p-b-30">
+              <label class="stext-110 cl2" for="voucher">Voucher:</label>
+              <div class="rs1-select2 rs2-select2 bor8 bg0 m-t-10">
+                <select class="js-select2" name="voucher" id="voucher">
+                  <option value="">-- Chọn Voucher --</option>
+                  <option th:each="voucher : ${vouchers}"
+                          th:value="${voucher.id}"
+                          th:data-percent="${voucher.discountPercent}"
+                          th:text="${voucher.code + ' - ' + voucher.discountPercent + '%'}">
+                  </option>
+                </select>
+                <div class="dropDownSelect2"></div>
               </div>
             </div>
 
             <!-- Payment method -->
-            <div class="flex-w flex-t bor12 p-t-15 p-b-30 align-items-center">
-              <div class="size-208 w-full-ssm" style="flex: 0 0 30%; max-width: 30%; display: flex; align-items: center;">
-      <span class="stext-110 cl2">
-        Payment method:
-      </span>
-              </div>
-              <div class="size-209 p-r-18 p-r-0-sm w-full-ssm" style="flex: 0 0 70%; max-width: 70%;">
-
-                <div class="rs1-select2 rs2-select2 bor8 bg0">
-                  <select class="js-select2" name="paymentMethod" id="paymentMethod">
-                    <option value="COD">COD</option>
-                    <option value="VIETQR">VietQR</option>
-                  </select>
-                  <div class="dropDownSelect2"></div>
-                </div>
+            <div class="p-t-15 p-b-30">
+              <label class="stext-110 cl2" for="paymentMethod">Payment method:</label>
+              <div class="rs1-select2 rs2-select2 bor8 bg0 m-t-10">
+                <select class="js-select2" name="paymentMethod" id="paymentMethod">
+                  <option value="COD">COD</option>
+                  <option value="VIETQR">VietQR</option>
+                </select>
+                <div class="dropDownSelect2"></div>
               </div>
             </div>
+
 
             <!-- Hiển thị VietQR -->
             <div id="vietqr-section" class="text-center p-t-15" style="display:none;">
@@ -224,7 +241,7 @@
             </div>
 
             <a  href="#payment" id="btn-payment" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-              Proceed to Checkout
+              Place an order
             </a>
           </div>
         </div>
