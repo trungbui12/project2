@@ -1,0 +1,14 @@
+[33m7dea99d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33mc5dad1a[m HEAD@{1}: reset: moving to HEAD~1
+[33mfe5cf9f[m HEAD@{2}: commit (amend): 99%
+[33mf28edb1[m HEAD@{3}: reset: moving to f28edb1
+[33m6b88d2d[m HEAD@{4}: merge origin/main: Merge made by the 'ort' strategy.
+[33m6598842[m HEAD@{5}: commit (amend): 95%
+[33m1b3a5d8[m[33m ([m[1;31morigin/nobita[m[33m)[m HEAD@{6}: merge origin/main: Merge made by the 'ort' strategy.
+[33mf28edb1[m HEAD@{7}: commit (amend): 90%
+[33m24fc7ab[m HEAD@{8}: merge origin/main: Merge made by the 'ort' strategy.
+[33mc5dad1a[m HEAD@{9}: commit (amend): quan ky don hang va thanh toan
+[33m3dde5e7[m HEAD@{10}: commit (amend): update static
+[33mcda3e2a[m HEAD@{11}: commit: update static
+[33m7dea99d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{12}: commit: second commit
+[33m95cd211[m HEAD@{13}: commit (initial): first commit

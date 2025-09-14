@@ -34,6 +34,7 @@
                                     <th class="column-1">Product</th>
                                     <th class="column-2"></th>
                                     <th class="column-3">Price</th>
+                                    <th class="column-6">Size</th>
                                     <th class="column-4">Quantity</th>
                                     <th class="column-5">Total</th>
                                     <th class="text-center" width="5%"> </th>
@@ -50,6 +51,7 @@
                                         </td>
                                         <td class="column-2" th:text="${cartDetail.product.name}"></td>
                                         <td class="column-3 product-price" th:attr="data-price=${cartDetail.product.price}" th:text="${#numbers.formatDecimal(cartDetail.product.price, 1, 'COMMA', 0, 'POINT') + 'đ'}"></td>
+                                        <td class="column-6" th:text="${cartDetail.size}">M</td>
                                         <td class="column-4">
                                             <label th:if="${errorQuantity==cartDetail.id}" class="text-danger">So luong khong du</label>
                                             <div class="wrap-num-product flex-w m-l-auto m-r-0">
@@ -65,7 +67,11 @@
                                             </div>
                                         </td>
                                         <td class="column-5 line-total" th:text="${#numbers.formatDecimal(cartDetail.product.price *cartDetail.quantity, 1, 'COMMA', 0, 'POINT') + 'đ'}">0 đ</td>
-
+                                        <td>
+                                            <a th:href="@{|/carts/cartdemo/remove/${cartDetail.id}|}" class="text-danger">
+                                                <i class="fa fa-remove"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 </th:block>
                             </table>

@@ -69,9 +69,7 @@
                     </td>
                     <td class="column-5 line-total" th:text="${#numbers.formatDecimal(cartDetail.product.price *cartDetail.quantity, 1, 'COMMA', 0, 'POINT') + 'đ'}">0 đ</td>
                     <td>
-                      <a th:href="@{|/carts/remove/${cartDetail.id}|}" class="text-danger">
-                        <i class="fa fa-remove"></i>
-                      </a>
+                      <a th:href="@{|/carts/remove/${cartDetail.id}|}"></a>
                     </td>
                   </tr>
                 </th:block>

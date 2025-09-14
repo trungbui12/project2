@@ -207,6 +207,15 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
   -moz-transition: all 0.3s;
   transition: all 0.3s;
 }
+.quantity-display {
+    display: inline-block;
+    min-width: 40px;   /* chiều rộng cố định để căn chỉnh */
+    text-align: center;
+    font-size: 16px;   /* tăng kích thước chữ */
+    font-weight: 500;
+    padding: 5px 0;
+}
+
 
 .header-v2 .container-menu-desktop {
   height: 84px;
